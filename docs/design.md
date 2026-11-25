@@ -1403,6 +1403,28 @@ Decided on 2026-11-25 in a grilling session before step 16. Until then only the 
 - The account's public profile (display name, e-mail, location, bio) is shown next to every repo and is checked along with the repos.
 - The website and its screenshots are English throughout: game names in their English form (Color Fields, Wall Breaker, Fishing Pond, Doodle Box; Mau-Mau keeps its name), and the catalog is now called "Gamehearth catalog" instead of "Gamehearth-Katalog", because servers show that name in every language.
 
+### Shadow Stage and music (steps 17 and 17b)
+
+Decided on 2026-11-25 in a grilling session before step 17. The maintainer is a fan of roguelikes and deckbuilders and asked for a game that is clearly more complex than the first five. Refines "Bots, playing on and sound (steps 15 and 15b)" (music next to sounds) and "Single player, saves and offline" (a larger single-player game on the same path).
+
+**Game 6 is "Schattenbühne / Shadow Stage"** (ID `schattenbuehne`), a roguelike deckbuilder for one player. An abandoned travelling shadow theatre: at night the paper puppets wake up and play the last performance against the shadows of their vanished puppet master. A run is three acts of about 15 minutes on a branching act map; fights run on a **timeline** instead of energy (every card costs ticks, whoever is furthest back acts next, enemies announce action and tick). Two puppets in 0.1.0 (Tightrope Dancer, Strongman), about 80 cards, 30 props, 12 tricks, 15 events, 27 enemies; unlocks through an applause bar per puppet and five difficulty levels, shareable run codes and a daily performance. It is an original game of the genre: its name, setting, puppets, enemies, cards, terms and look are its own; nothing is taken from existing games. Its rules and content plan are in the game repo (`docs/concept.md`, `docs/build-plan.md`). Rejected: co-op for 1–4 with a reducer (no offline, solo always through a room) and co-op only (the core of the genre, puzzling alone, would be lost); energy per turn (the most common core of the genre, the game would only differ in content) and a positional grid (cramped on a phone, the hardest to build and test).
+
+**The single-player path is enough.** `connectSolo` carries the game: the run in progress, unlocks, levels, daily results and settings fit into the save (estimated under 16 KB during a fight, at most 64 KB); best scores are `punkte`, `hoechste-zugabe` and `siege` (all `higher`; wins only grow, because single-player games have no counters). The game uses its own seeded generator in `src/` for codes and the daily performance and keeps the generator's state in the save, so reloading never rerolls. Profiles with items and flags are not needed.
+
+**No daily leaderboard.** The daily performance gets its seed from the device's local date and is the same offline for everyone; the game shows the result of the first finished attempt of the day, and the family compares at the table. The platform's leaderboards stay all-time. Rejected: a platform step for best scores per period before the game (manifest field, server, sync and game page; a large step for a comparison that works at the table) and no seeds at all.
+
+**Engine split: Phaser for the stage, HTML for the cards.** The maintainer asked for rich animation. The stage (jointed puppets, lamp light, shadows that grow and blur, particles, shake, curtain) runs in Phaser 4 with WebGL, because blur and light in CSS stutter on mid-range phones; hand, timeline and menus are HTML above it, for sharp text in two languages, screen readers and Playwright. The rules return events for every action, and a "director" in the client plays them on both layers. This keeps "Phaser for everything" as the template's recommendation while showing that a game may mix. Rejected: HTML and SVG only (simpler, but light and blur effects stay plain or stutter) and Phaser only (card text on canvas, no screen readers).
+
+**Music through the platform (step 17).** Games could only play short sounds (16 notes within 2 seconds). A game now plays a **looping track** with `game.music(track)` and stops it with `game.music(null)`; the platform synthesizes it with Web Audio like the sounds: no audio files, no license questions, nothing extra to preload for offline. A track has a tempo, a length in beats and up to 4 voices with at most 256 notes in total and loops of at most 60 seconds; instruments are the four waves plus a few presets (such as a music box, an organ, a plucked string, a bass and filtered noise for wind or crackle). Starting another track crossfades; the same track again keeps playing; music pauses while the page is hidden. Invalid tracks return `false` with a console message, like sounds. The game decides which device plays music (with a TV, as with sounds, shared music comes from the TV). Rejected: audio files in the package (license check in `check`, size limits, preloading, and someone has to find or make free music; stays deferred) and longer sound sequences scheduled by the game (timing drifts, the throttle of 12 sounds per second, and every game would build its own sequencer).
+
+**Music has its own switch.** Next to "Ton" / "Sound" comes "Musik" / "Music", a device setting like the sound switch, in the menus of the game and single-player pages and on the TV. Music plays only when both are on; the music switch is on by default, so turning on sound brings music along, and it can be turned off on its own (on the train, in the living room). Music is mixed quieter than sounds; the iPhone's silent switch applies as before. `game.musicOn` and `game.onMusic` tell the game. Rejected: one switch for both (whoever dislikes the loop would have to give up all sound), which refines "One switch, off by default" from step 15 for music only.
+
+**Step 17 covers** SDK 0.1.9 (`music`, `musicOn`, `onMusic`, validation in the SDK), the bridge, playback and the switch in the client including the TV, `dev` with a music switch in its header that names the playing track, the SDK README and the templates' `AGENTS.md`, Mushroom Hunt with a short loop as the pattern, and a test game in `fixtures/` with a browser test (stubbed `AudioContext`). Games that use music need SDK 0.1.9 as a package; older servers play nothing. Dev tool 0.11.0. Publishing to npm by tag (the first run of trusted publishing), pushing and rolling out each need the maintainer's OK. Step 17 runs alongside the first stages of the game; the game adds music in its last stage.
+
+**Step 17b builds the game in five stages:** rules core, the fight on the stage, act map and stations, content and progress, polish. Each stage is built by a fresh agent that knows only the game repo and the READMEs in `node_modules`, not the platform, created on the public path (`npx gamehearth new --template single` with the packages from npm); each stage gets an independent review, and every finding that holds becomes a regression test. Rejected: the lead session builds with helpers (faster, but with knowledge of the platform, so gaps in the docs show less) and one agent for everything (the game is about five times the size of Mauerbrecher). Repo, release and catalog entry only after the maintainer's OK.
+
+**Look: "Amber light" ("Bernsteinlicht").** Three drafts in phone size (390 × 844 including the platform bar) were compared by screenshot, each with the screens fight, card selected, act map and reward: A Amber light (a lamp behind amber paper, black jointed puppets on rods, a carved frame with a red velvet curtain, cards like old theatre tickets, the timeline as a brass rod), B Moon screen (a cold moonlit cloth in an abandoned theatre, one candle as the only warm light, slate cards with silver edges) and C Coloured parchment (translucent coloured puppets like dim stained glass, colour-coded card types). The maintainer chose A. The draft goes into the game repo under `docs/draft/`. Rejected: B (almost monochrome, card types less distinct at a glance) and C (the least dark, and the puppets lose their shadow character).
+
 ### Automated testing
 
 Every multiplayer reducer **must** provide `legalMoves(state, playerId)`. For realtime games it describes the space of possible inputs.
@@ -1526,6 +1548,11 @@ Both built, reviewed and released on 2026-11-24.
 
 16. SDK and dev tool on npm, the games and the catalog in fresh repos with npm and a patch version each, the starter repo, the platform repo public, the website on GitHub Pages; done on 2026-11-25
 
+**Game 6** (decided on 2026-11-25, see "Shadow Stage and music (steps 17 and 17b)"):
+
+17. Music loops through the platform: `game.music` in SDK 0.1.9, playback and a music switch in the client and on the TV, `dev` 0.11.0, docs and templates, test game in `fixtures/`
+17b. Schattenbühne / Shadow Stage (game 6, roguelike deckbuilder) in five stages, each by a fresh agent with no prior knowledge on the public path and each with its own review
+
 ## Deliberately deferred
 
 - isolated-vm instead of QuickJS, if realtime games need more compute time
@@ -1545,7 +1572,8 @@ Both built, reviewed and released on 2026-11-24.
 - undoing a move in `dev`; docs in English have been planned as step 13 since 2026-11-20
 - guests in single-player games, a browser smoke test in `check` for games without a reducer, testing offline play in Firefox
 - a tick rate per game instead of a fixed 20 Hz, replay in `dev` for realtime
-- sound files in games (only synthesized sounds since step 15), sound that ignores the iPhone's silent switch, a volume control
+- sound files in games (only synthesized sounds since step 15, synthesized music loops since step 17), sound that ignores the iPhone's silent switch, a volume control
+- leaderboards per period (for example a daily leaderboard; game 6 compares its daily performance at the table, decided on 2026-11-25)
 - items, counters and flags for single-player games without a reducer, options for single-player games without a reducer, number ranges as options, leaderboards split by options
 - restructuring `docs/design.md` into a reference of the current state and a decision log, for instance when the platform repo becomes public
 
@@ -1656,5 +1684,7 @@ Added in step 13. The glossary keeps one English word per concept in docs, code 
 | Bot, Sitz abgeben, zurücknehmen | bot, hand over a seat, take it back |
 | abwesend, weiterspielen | away, play on |
 | Ton, Klang, Stummschalter | sound, sound (a single one), silent switch |
+| Musik, Musikschleife, Musik-Schalter | music, track (a loop), music switch |
+| Tageslauf, Tagesvorstellung | daily run, daily performance (game 6) |
 
 Renamed in step 13: templates `rundenbasiert`, `echtzeit`, `einzelspieler` → `turn-based`, `realtime`, `single` (old names still work in `new`); examples Kartenduell, Fangen, Pilzsuche → Card Duel, Tag, Mushroom Hunt; starter "Mein Spiel" → "My Game"; routes `/konto`, `/koppeln`, `/spiel/<id>`, `/spielen/<id>` → `/account`, `/pair`, `/game/<id>`, `/play/<id>`.
