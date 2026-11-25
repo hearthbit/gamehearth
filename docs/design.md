@@ -1394,6 +1394,15 @@ Decided on 2026-11-25 in a grilling session before step 16. Until then only the 
 
 **Issues and pull requests are open.** The platform, the games and the catalog each have a short `CONTRIBUTING.md` (open an issue first; contributions are licensed under the repo's license) and a `SECURITY.md` that points to GitHub's private vulnerability reporting instead of an e-mail address. The starter repo stays exactly what `new` creates and points to the platform for issues. Rejected: issues only (seems dismissive) and read-only repos (no way to report bugs).
 
+**Settled while publishing (2026-11-25).** Everything above was done in the planned order; the release packages built by CI are byte-identical with the packages `pack` built locally, and the npm packages with the tarballs that were reviewed before publishing. Before going public, two reviewers with no prior knowledge checked everything that would become public (files, images and their metadata, fonts, lock files, npm packages, repo descriptions) for private details.
+
+- npm stages the first publication of a new package: a public placeholder version `0.0.0-stage` appears at once, the real version follows after a few minutes of automated checks. The placeholders were deprecated afterwards. A new package can only be published from an account with a verified e-mail address, and npm shows the e-mail address of every maintainer publicly; the account therefore uses an address that exists only for this project.
+- The unscoped dev tool `gamehearth` belongs to the account that published it, not to the organization `gamehearth`; it appears under the organization only once the organization's team gets access to it.
+- After switching the games from `file:vendor/…` to npm ranges, `npm install` kept the old `file:` entries of SDK and dev tool in the lock files; only `npm install <package>@<range>` resolved them from the registry. The lock files were checked for `resolved` URLs outside the registry before publishing.
+- Right after a repo is renamed and made private, GitHub briefly rejects pushes to it ("repository is disabled"); a retry a few seconds later works.
+- The account's public profile (display name, e-mail, location, bio) is shown next to every repo and is checked along with the repos.
+- The website and its screenshots are English throughout: game names in their English form (Color Fields, Wall Breaker, Fishing Pond, Doodle Box; Mau-Mau keeps its name), and the catalog is now called "Gamehearth catalog" instead of "Gamehearth-Katalog", because servers show that name in every language.
+
 ### Automated testing
 
 Every multiplayer reducer **must** provide `legalMoves(state, playerId)`. For realtime games it describes the space of possible inputs.
@@ -1515,7 +1524,7 @@ Both built, reviewed and released on 2026-11-24.
 
 **Publication** (decided on 2026-11-25, see "Publication (step 16)"):
 
-16. SDK and dev tool on npm, the games and the catalog in fresh repos with npm and a patch version each, the starter repo, the platform repo public, the website on GitHub Pages
+16. SDK and dev tool on npm, the games and the catalog in fresh repos with npm and a patch version each, the starter repo, the platform repo public, the website on GitHub Pages; done on 2026-11-25
 
 ## Deliberately deferred
 
