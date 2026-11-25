@@ -1,0 +1,52 @@
+{
+  "name": "gamehearth",
+  "version": "0.10.0",
+  "description": "Dev tool for Gamehearth games: create a new game, try it locally with several players, check it with bot matches and build it as a package",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hearthbit/gamehearth.git",
+    "directory": "packages/devtool"
+  },
+  "homepage": "https://github.com/hearthbit/gamehearth/tree/main/packages/devtool#readme",
+  "bugs": {
+    "url": "https://github.com/hearthbit/gamehearth/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "gamehearth",
+    "game",
+    "multiplayer",
+    "cli",
+    "devtool"
+  ],
+  "type": "module",
+  "bin": {
+    "gamehearth": "./dist/cli.js"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./sandbox": "./src/sandbox/index.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "templates",
+    "!templates/*/dist",
+    "!templates/*/node_modules",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prepack": "npm run build",
+    "build": "esbuild src/cli.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/cli.js --external:esbuild --external:quickjs-emscripten-core --external:@jitl/quickjs-wasmfile-release-sync --log-level=warning \"--banner:js=#!/usr/bin/env node\""
+  },
+  "dependencies": {
+    "@gamehearth/sdk": "^0.1.8",
+    "@jitl/quickjs-wasmfile-release-sync": "0.32.0",
+    "esbuild": "^0.28.2",
+    "quickjs-emscripten-core": "0.32.0"
+  }
+}

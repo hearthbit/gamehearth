@@ -1,0 +1,16 @@
+{
+  "id": "wettlauf",
+  "name": "Wettlauf",
+  "version": "0.1.0",
+  "description": "Echtzeit-Testspiel: Fernseher zeigt die Bahn, Handys halten den Lauf-Knopf",
+  "sdk": "^0.1.1",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "realtime",
+  "players": { "min": 2, "max": 4 },
+  "server": true,
+  "client": "dist/client",
+  "roles": {
+    "screen": { "inputs": [], "screen": "large" },
+    "controller": { "inputs": ["touch", "mouse", "keyboard"], "screen": "small" }
+  }
+}

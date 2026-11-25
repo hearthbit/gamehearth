@@ -1,0 +1,12 @@
+{
+  "id": "setup-random-later",
+  "name": "Test game setup-random-later",
+  "version": "0.1.0",
+  "sdk": "^0.1.0",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "turn-based",
+  "players": { "min": 1, "max": 2 },
+  "server": true,
+  "client": "client",
+  "roles": { "player": { "inputs": ["touch"], "screen": "small" } }
+}

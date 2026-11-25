@@ -1,0 +1,38 @@
+{
+  "name": "@gamehearth/sdk",
+  "version": "0.1.8",
+  "description": "SDK for Gamehearth games: reducer contract, match runner, seeded randomness, per-player view",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hearthbit/gamehearth.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://github.com/hearthbit/gamehearth/tree/main/packages/sdk#readme",
+  "bugs": {
+    "url": "https://github.com/hearthbit/gamehearth/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "gamehearth",
+    "game",
+    "multiplayer",
+    "reducer",
+    "sdk"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./platform": "./src/platform.ts"
+  },
+  "files": [
+    "src",
+    "LICENSE"
+  ]
+}

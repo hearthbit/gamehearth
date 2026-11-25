@@ -1,0 +1,12 @@
+{
+  "id": "bot-unstable",
+  "name": "Test game bot-unstable",
+  "version": "0.1.0",
+  "sdk": "^0.1.0",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "turn-based",
+  "players": { "min": 2, "max": 4 },
+  "server": true,
+  "client": "client",
+  "roles": { "player": { "inputs": ["touch"], "screen": "small" } }
+}

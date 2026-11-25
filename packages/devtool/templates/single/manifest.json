@@ -1,0 +1,23 @@
+{
+  "id": "mushroom-hunt",
+  "name": { "en": "Mushroom Hunt", "de": "Pilzsuche" },
+  "version": "0.1.0",
+  "description": {
+    "en": "Run through three small mazes and collect all mushrooms as fast as you can",
+    "de": "Lauf durch drei kleine Labyrinthe und sammle so schnell du kannst alle Pilze"
+  },
+  "languages": ["en", "de"],
+  "cover": "cover.svg",
+  "sdk": "^0.1.6",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "single",
+  "players": { "min": 1, "max": 1 },
+  "server": false,
+  "client": "dist/client",
+  "roles": {
+    "player": { "inputs": ["touch", "keyboard"], "screen": "small" }
+  },
+  "stats": {
+    "best-time": { "label": { "en": "Best time", "de": "Bestzeit" }, "better": "lower", "format": "time" }
+  }
+}

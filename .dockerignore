@@ -1,0 +1,11 @@
+.git
+.claude
+**/node_modules
+**/dist
+data
+coverage
+*.log
+*.sqlite
+*.sqlite-journal
+Dockerfile
+.dockerignore

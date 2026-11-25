@@ -1,0 +1,30 @@
+{
+  "id": "rt-away-bot",
+  "name": "Test game rt-away-bot",
+  "version": "0.1.0",
+  "sdk": "^0.1.8",
+  "license": {
+    "code": "MIT",
+    "assets": "CC0-1.0"
+  },
+  "mode": "realtime",
+  "away": "play-on",
+  "players": {
+    "min": 2,
+    "max": 3
+  },
+  "server": true,
+  "client": "client",
+  "roles": {
+    "screen": {
+      "inputs": [],
+      "screen": "large"
+    },
+    "controller": {
+      "inputs": [
+        "touch"
+      ],
+      "screen": "small"
+    }
+  }
+}

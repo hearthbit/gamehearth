@@ -1,0 +1,26 @@
+{
+  "id": "gluecksrad",
+  "name": "Glücksrad",
+  "version": "0.1.0",
+  "description": "Testspiel mit Optionen: Reihum dreht jeder am Rad, Runden und Joker stellt der Gastgeber ein",
+  "sdk": "^0.1.3",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "turn-based",
+  "players": { "min": 1, "max": 4 },
+  "server": true,
+  "client": "dist/client",
+  "roles": { "player": { "inputs": ["touch", "mouse"], "screen": "small" } },
+  "options": {
+    "runden": {
+      "label": "Runden",
+      "type": "choice",
+      "default": 3,
+      "choices": [
+        { "value": 2, "label": "2 Runden" },
+        { "value": 3, "label": "3 Runden" },
+        { "value": 5, "label": "5 Runden" }
+      ]
+    },
+    "joker": { "label": "Joker", "type": "boolean", "default": false }
+  }
+}

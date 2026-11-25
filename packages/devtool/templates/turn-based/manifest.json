@@ -1,0 +1,38 @@
+{
+  "id": "card-duel",
+  "name": { "en": "Card Duel", "de": "Kartenduell" },
+  "version": "0.1.0",
+  "description": {
+    "en": "Everyone plays a card face down at the same time, the highest wins the round",
+    "de": "Alle spielen gleichzeitig verdeckt eine Karte, die höchste gewinnt die Runde"
+  },
+  "languages": ["en", "de"],
+  "cover": "cover.svg",
+  "sdk": "^0.1.6",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "turn-based",
+  "players": { "min": 2, "max": 4 },
+  "server": true,
+  "client": "dist/client",
+  "roles": {
+    "player": { "inputs": ["touch", "mouse", "keyboard"], "screen": "small" }
+  },
+  "options": {
+    "rounds": {
+      "label": { "en": "Rounds", "de": "Runden" },
+      "type": "choice",
+      "default": 5,
+      "choices": [
+        { "value": 3, "label": { "en": "3 rounds", "de": "3 Runden" } },
+        { "value": 5, "label": { "en": "5 rounds", "de": "5 Runden" } },
+        { "value": 7, "label": { "en": "7 rounds", "de": "7 Runden" } }
+      ]
+    }
+  },
+  "items": {
+    "joker": { "label": { "en": "Joker", "de": "Joker" } }
+  },
+  "stats": {
+    "wins": { "label": { "en": "Wins", "de": "Siege" }, "better": "higher" }
+  }
+}

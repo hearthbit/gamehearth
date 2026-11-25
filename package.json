@@ -1,0 +1,31 @@
+{
+  "name": "gamehearth-platform",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "fixtures/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json && tsc -p packages/devtool/tsconfig.json && tsc -p packages/devtool/src/dev/page/tsconfig.json && tsc -p packages/server/tsconfig.json && tsc -p packages/client/tsconfig.json && tsc -p fixtures/mau-mau/client/tsconfig.json && tsc -p fixtures/wettlauf/client/tsconfig.json && tsc -p fixtures/sammler/client/tsconfig.json && tsc -p fixtures/gluecksrad/client/tsconfig.json && tsc -p fixtures/dorfladen/client/tsconfig.json && tsc -p fixtures/notizblock/client/tsconfig.json && tsc -p fixtures/reihum/client/tsconfig.json && tsc -p packages/devtool/templates/turn-based/tsconfig.json && tsc -p packages/devtool/templates/turn-based/client/tsconfig.json && tsc -p packages/devtool/templates/realtime/tsconfig.json && tsc -p packages/devtool/templates/realtime/client/tsconfig.json && tsc -p packages/devtool/templates/single/tsconfig.json && tsc -p packages/devtool/templates/single/client/tsconfig.json && tsc -p e2e/tsconfig.json",
+    "build": "npm run build --workspaces --if-present --silent",
+    "gamehearth": "npm run build --workspace=packages/devtool --silent && node packages/devtool/dist/cli.js",
+    "starter": "npm run build --workspace=packages/devtool --silent && node scripts/write-starter.mjs",
+    "server": "npm run build --silent && node --disable-warning=ExperimentalWarning scripts/dev-server.mjs",
+    "dev": "npm run dev --workspace=packages/client",
+    "icons": "node scripts/render-icons.mjs",
+    "e2e": "playwright test",
+    "site:shots": "node scripts/site-screenshots.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

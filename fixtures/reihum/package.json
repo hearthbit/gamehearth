@@ -1,0 +1,20 @@
+{
+  "name": "@gamehearth/game-reihum",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Realtime test game with turns, bots, seats that are away and sound, frozen for server, check and browser tests",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@gamehearth/sdk": "0.1.8"
+  },
+  "scripts": {
+    "build": "vite build --config client/vite.config.ts --logLevel warn"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

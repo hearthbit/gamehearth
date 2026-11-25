@@ -1,0 +1,29 @@
+{
+  "id": "rt-endless",
+  "name": "Test game rt-endless",
+  "version": "0.1.0",
+  "sdk": "^0.1.1",
+  "license": {
+    "code": "MIT",
+    "assets": "CC0-1.0"
+  },
+  "mode": "realtime",
+  "players": {
+    "min": 2,
+    "max": 3
+  },
+  "server": true,
+  "client": "client",
+  "roles": {
+    "screen": {
+      "inputs": [],
+      "screen": "large"
+    },
+    "controller": {
+      "inputs": [
+        "touch"
+      ],
+      "screen": "small"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@gamehearth/game-notizblock",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Realtime test game with typed notes, growing ink and an optional TV, frozen for server, check and browser tests",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@gamehearth/sdk": "0.1.8"
+  },
+  "scripts": {
+    "build": "vite build --config client/vite.config.ts --logLevel warn"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

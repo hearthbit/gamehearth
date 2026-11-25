@@ -1,0 +1,45 @@
+{
+  "id": "dorfladen",
+  "name": "Dorfladen",
+  "version": "0.1.0",
+  "description": {
+    "de": "Testspiel mit Profilen: Münzen verdienen, Äpfel kaufen und essen, Siege und Bestwerte sammeln",
+    "en": "Test game with profiles: earn coins, buy and eat apples, collect wins and best scores"
+  },
+  "sdk": "^0.1.6",
+  "languages": ["de", "en"],
+  "cover": "cover.svg",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "turn-based",
+  "players": { "min": 1, "max": 4 },
+  "server": true,
+  "client": "dist/client",
+  "roles": { "player": { "inputs": ["touch", "mouse"], "screen": "small" } },
+  "options": {
+    "runden": {
+      "label": { "de": "Runden", "en": "Rounds" },
+      "type": "choice",
+      "default": 3,
+      "choices": [
+        { "value": 2, "label": { "de": "2 Runden", "en": "2 rounds" } },
+        { "value": 3, "label": { "de": "3 Runden", "en": "3 rounds" } },
+        { "value": 5, "label": { "de": "5 Runden", "en": "5 rounds" } }
+      ]
+    }
+  },
+  "items": {
+    "muenze": { "label": { "de": "Münze", "en": "Coin" } },
+    "apfel": { "label": { "de": "Apfel", "en": "Apple" } },
+    "alte-muenze": { "label": { "de": "Alte Münze", "en": "Old coin" }, "deprecated": true }
+  },
+  "stats": {
+    "siege": { "label": { "de": "Siege", "en": "Wins" }, "better": "higher" },
+    "bestwert": { "label": { "de": "Meiste Punkte", "en": "Most points" }, "better": "higher" },
+    "partien": { "label": { "de": "Gespielte Partien", "en": "Matches played" } },
+    "kuerzeste": { "label": { "de": "Kürzeste Partie", "en": "Shortest match" }, "better": "lower", "format": "time" }
+  },
+  "flags": {
+    "gegessen": { "label": { "de": "Hat schon einen Apfel gegessen", "en": "Has eaten an apple" } },
+    "titel": { "label": { "de": "Titel", "en": "Title" } }
+  }
+}

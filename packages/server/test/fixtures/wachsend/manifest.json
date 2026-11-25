@@ -1,0 +1,16 @@
+{
+  "id": "wachsend",
+  "name": "Wachsend",
+  "version": "1.0.0",
+  "sdk": "^0.1.4",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "realtime",
+  "players": { "min": 1, "max": 2 },
+  "server": true,
+  "client": "client",
+  "roles": {
+    "screen": { "inputs": [], "screen": "large" },
+    "controller": { "inputs": ["touch"], "screen": "small" }
+  },
+  "stats": { "taps": { "label": "Taps" } }
+}

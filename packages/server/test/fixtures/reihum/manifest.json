@@ -1,0 +1,13 @@
+{
+  "id": "reihum",
+  "name": "Reihum",
+  "version": "1.0.0",
+  "sdk": "^0.1.8",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "realtime",
+  "away": "play-on",
+  "players": { "min": 2, "max": 4 },
+  "server": true,
+  "client": "client",
+  "roles": { "player": { "inputs": ["touch"], "screen": "small" } }
+}

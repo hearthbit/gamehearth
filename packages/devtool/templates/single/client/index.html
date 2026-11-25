@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Mushroom Hunt</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div id="field" aria-hidden="true"></div>
+    <div id="pad" role="group" aria-label="D-pad"></div>
+    <section id="menu" hidden aria-labelledby="title">
+      <h1 id="title">Mushroom Hunt</h1>
+      <p id="record"></p>
+      <p id="message" aria-live="polite"></p>
+      <div id="entries"></div>
+    </section>
+    <p id="fallback" hidden></p>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

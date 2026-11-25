@@ -1,0 +1,36 @@
+{
+  "id": "tag",
+  "name": { "en": "Tag", "de": "Fangen" },
+  "version": "0.1.0",
+  "description": {
+    "en": "One player is the catcher, whoever they touch becomes the catcher; at the end, whoever was the catcher for the shortest time wins",
+    "de": "Einer fängt, wen er berührt, der fängt als Nächstes; am Ende gewinnt, wer am kürzesten Fänger war"
+  },
+  "languages": ["en", "de"],
+  "cover": "cover.svg",
+  "sdk": "^0.1.6",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "realtime",
+  "players": { "min": 2, "max": 6 },
+  "server": true,
+  "client": "dist/client",
+  "roles": {
+    "screen": { "inputs": [], "screen": "large" },
+    "controller": { "inputs": ["touch", "keyboard"], "screen": "small" }
+  },
+  "options": {
+    "duration": {
+      "label": { "en": "Duration", "de": "Dauer" },
+      "type": "choice",
+      "default": 60,
+      "choices": [
+        { "value": 30, "label": { "en": "30 seconds", "de": "30 Sekunden" } },
+        { "value": 60, "label": { "en": "1 minute", "de": "1 Minute" } },
+        { "value": 90, "label": { "en": "1.5 minutes", "de": "1,5 Minuten" } }
+      ]
+    }
+  },
+  "stats": {
+    "wins": { "label": { "en": "Wins", "de": "Siege" }, "better": "higher" }
+  }
+}

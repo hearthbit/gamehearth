@@ -1,0 +1,26 @@
+{
+  "id": "rt-words-old",
+  "name": "Test game rt-words-old",
+  "version": "0.1.0",
+  "sdk": "^0.1.6",
+  "license": {
+    "code": "MIT",
+    "assets": "CC0-1.0"
+  },
+  "mode": "realtime",
+  "players": {
+    "min": 2,
+    "max": 3
+  },
+  "server": true,
+  "client": "client",
+  "roles": {
+    "player": {
+      "inputs": [
+        "touch",
+        "keyboard"
+      ],
+      "screen": "small"
+    }
+  }
+}

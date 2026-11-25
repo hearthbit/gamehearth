@@ -1,0 +1,19 @@
+{
+  "id": "sammler",
+  "name": "Sammler",
+  "version": "0.1.0",
+  "description": "Testspiel für Einzelspieler ohne Reducer: Sterne sammeln, Spielstand und Bestwerte",
+  "sdk": "^0.1.2",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "single",
+  "players": { "min": 1, "max": 1 },
+  "server": false,
+  "client": "dist/client",
+  "roles": {
+    "player": { "inputs": ["touch", "mouse", "keyboard"], "screen": "small" }
+  },
+  "stats": {
+    "sterne": { "label": "Sterne", "better": "higher" },
+    "dauer": { "label": "Schnellste Runde", "better": "lower", "format": "time" }
+  }
+}

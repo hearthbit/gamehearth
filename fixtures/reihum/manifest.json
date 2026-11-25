@@ -1,0 +1,16 @@
+{
+  "id": "reihum",
+  "name": "Reihum",
+  "version": "0.1.0",
+  "description": "Realtime test game: press when it is your turn; seats that are away are skipped, bots fill empty seats",
+  "sdk": "^0.1.8",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "realtime",
+  "away": "play-on",
+  "players": { "min": 2, "max": 4 },
+  "server": true,
+  "client": "dist/client",
+  "roles": {
+    "player": { "inputs": ["touch", "keyboard"], "screen": "small" }
+  }
+}

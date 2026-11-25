@@ -1,0 +1,21 @@
+export {
+  catcherSpeed,
+  clamp,
+  distanceSquared,
+  fleeFrom,
+  directions,
+  fieldHeight,
+  fieldWidth,
+  freezeTicks,
+  radius,
+  runnerSpeed,
+  shortestCatchers,
+  startPoint,
+  tag as default,
+  tag,
+  tagBackTicks,
+  ticksPerSecond,
+  touching,
+  towards,
+} from "./game";
+export type { Direction, Ids, Options, Point, Public, TagAction, TagState } from "./game";

@@ -1,0 +1,37 @@
+name: Publish to npm
+
+on:
+  push:
+    tags: ["sdk-v*", "devtool-v*"]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - name: Pick the package from the tag
+        run: |
+          case "$GITHUB_REF_NAME" in
+            sdk-v*) dir=packages/sdk; version="${GITHUB_REF_NAME#sdk-v}" ;;
+            devtool-v*) dir=packages/devtool; version="${GITHUB_REF_NAME#devtool-v}" ;;
+          esac
+          actual=$(node -p "require('./$dir/package.json').version")
+          if [ "$version" != "$actual" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match version $actual in $dir/package.json"
+            exit 1
+          fi
+          echo "PACKAGE_DIR=$dir" >> "$GITHUB_ENV"
+      - run: npm install --global npm@11
+      - run: npm ci --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npx vitest run "$PACKAGE_DIR"
+      - run: npm publish --workspace "$PACKAGE_DIR" --access public

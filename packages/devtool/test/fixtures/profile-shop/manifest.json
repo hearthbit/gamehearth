@@ -1,0 +1,23 @@
+{
+  "id": "profile-shop",
+  "name": "Test game profile-shop",
+  "version": "0.1.0",
+  "sdk": "^0.1.4",
+  "license": { "code": "MIT", "assets": "CC0-1.0" },
+  "mode": "turn-based",
+  "players": { "min": 1, "max": 3 },
+  "server": true,
+  "client": "client",
+  "roles": { "player": { "inputs": ["touch"], "screen": "small" } },
+  "items": {
+    "muenze": { "label": "Münze" },
+    "trank": { "label": "Trank" }
+  },
+  "stats": {
+    "siege": { "label": "Siege", "better": "higher" },
+    "zuege": { "label": "Getrunkene Tränke" }
+  },
+  "flags": {
+    "held": { "label": "Hat schon getrunken" }
+  }
+}

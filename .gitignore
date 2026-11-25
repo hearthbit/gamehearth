@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+coverage/
+.env
+.env.*
+*.log
+*.sqlite
+*.sqlite-journal
+*.db
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+data/
+.claude/
+e2e-dev-*/
