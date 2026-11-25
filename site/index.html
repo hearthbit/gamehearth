@@ -14,19 +14,39 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="7" rx="2"/><rect x="3.5" y="13" width="17" height="7" rx="2"/><path d="M7.5 7.5h.01M7.5 16.5h.01M12 7.5h5M12 16.5h5"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M11 3.5l1.9 5.1 5.1 1.9-5.1 1.9L11 17.5l-1.9-5.1L4 10.5l5.1-1.9z"/><path d="M19 14.5v5M16.5 17h5"/></symbol>
+  <symbol id="i-app" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7v7M9 11l3 3 3-3M10.5 18.5h3"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 19.5 6v5.5c0 4.6-3.2 8.3-7.5 9.7-4.3-1.4-7.5-5.1-7.5-9.7V6z"/><rect x="9" y="11" width="6" height="4.5" rx="1"/><path d="M10.3 11V9.6a1.7 1.7 0 0 1 3.4 0V11"/></symbol>
+  <symbol id="i-rules" viewBox="0 0 24 24"><rect x="2.5" y="7.5" width="6" height="9" rx="1.5"/><rect x="15.5" y="7.5" width="6" height="9" rx="1.5"/><path d="M9.5 12h5M12.5 9.5 15 12l-2.5 2.5"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 2.8 20.5 7.5v9L12 21.2 3.5 16.5v-9z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9.2"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path d="m6.5 9 3 3-3 3M12 15h5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m7.5 12.5 3 3 6-6.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4.5h11a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11M9 8.5h6"/></symbol>
+  <symbol id="i-tv" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 8.5c1.5-1 3-1 4.5 0M7 11.5c.8-.5 1.6-.5 2.4 0"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4.5" y="7.5" width="15" height="12" rx="3"/><path d="M12 7.5v-3M12 3h.01M2.5 12v3M21.5 12v3M9.5 16.5h5"/><circle cx="9" cy="12.5" r="1"/><circle cx="15" cy="12.5" r="1"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="5.5" y="2.5" width="13" height="19" rx="2"/><path d="M12 9l2.5 3-2.5 3-2.5-3z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2.5 5.5 13.5H12l-1 8 7.5-11H12z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="m10 8 4.5 2.5L10 13zM8 21h8M12 17v4"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M3.5 8 12 3.5 20.5 8v8.5L12 21l-8.5-4.5z"/><path d="M3.5 8 12 12.5 20.5 8M12 12.5V21M7.7 5.8l8.6 4.5"/></symbol>
+</svg>
+
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="top">
   <nav class="wrap nav" aria-label="Sections">
     <a class="brand" href="#top"><img src="img/logo.svg" alt="" width="34" height="34">Gamehearth</a>
     <ul>
-      <li><a href="#idea">Idea</a></li>
       <li><a href="#how">How it works</a></li>
       <li><a href="#architecture">Architecture</a></li>
       <li><a href="#components">Components</a></li>
       <li><a href="#games">Games</a></li>
-      <li><a href="#make">Make a game</a></li>
-      <li><a href="#host">Host it</a></li>
+      <li><a href="#make">Make</a></li>
+      <li><a href="#host">Host</a></li>
     </ul>
   </nav>
 </header>
@@ -36,8 +56,8 @@
     <div class="wrap">
       <img class="mark" src="img/logo.svg" alt="" width="128" height="128">
       <h1 id="title">Gamehearth</h1>
-      <p class="lede">A game platform you host yourself, for your own circle of family and friends.</p>
-      <p class="intro">Open source from end to end. One Docker container serves an installable app to every phone, tablet, laptop and TV. Games come from catalogs you choose, run in sandboxes, and are designed to be built by people who don't program, together with an AI agent.</p>
+      <p class="lede">A game platform you host yourself, for family and friends.</p>
+      <p class="intro">Open source · one Docker container · games made with AI</p>
       <div class="actions">
         <a class="button tone-amber" href="#host">Host a server</a>
         <a class="button tone-green" href="#make">Make a game</a>
@@ -46,97 +66,77 @@
     </div>
     <div class="stage">
       <div class="wrap">
-      <figure class="screen screen-wide">
-        <img src="img/home-wide.webp" width="1280" height="800" alt="The Gamehearth home page in the neon hall look: five installed games shown as arcade cabinets (Fishing Pond, Color Fields, Doodle Box, Mau-Mau, Wall Breaker), each with a cover, player count and a button to create a room or play.">
-      </figure>
-      <figure class="screen screen-phone">
-        <img src="img/home.webp" width="780" height="1688" alt="The Gamehearth home page on a phone: the installed games as arcade cabinets with their covers and player counts.">
-      </figure>
-      <p class="caption">The home page of a fresh server with the five games from the public catalog.</p>
+        <figure class="screen screen-wide">
+          <img src="img/home-wide.webp" width="1280" height="800" alt="The Gamehearth home page in the neon hall look: five installed games shown as arcade cabinets, each with a cover, player count and a button to create a room or play.">
+        </figure>
+        <figure class="screen screen-phone">
+          <img src="img/home.webp" width="780" height="1688" alt="The Gamehearth home page on a phone: the installed games as arcade cabinets.">
+        </figure>
       </div>
-    </div>
-  </section>
-
-  <section class="section" id="idea" aria-labelledby="idea-title">
-    <div class="wrap">
-      <header>
-        <h2 id="idea-title">The idea</h2>
-      </header>
-      <div class="prose">
-        <p>Gamehearth is a fully open-source game platform that anyone can host. Players open the app on any device, connected to the server of their choice. That server has only the games its operator wants: for one player or several, turn-based or realtime, everyone on their own device or a TV with phones as controllers.</p>
-        <p>The games are open source as well and come from the community. Making them is built so that non-programmers can create games with an AI agent: a small SDK, a strict contract for game rules, and a checker that plays hundreds of matches before anyone else does.</p>
-      </div>
-      <div class="pillars" role="list">
-        <article class="card tone-amber" role="listitem">
-          <h3>Yours to run</h3>
-          <p>One container, one data folder, accounts only by invite. No app store and no third-party account between you and your players.</p>
-        </article>
-        <article class="card tone-pink" role="listitem">
-          <h3>Safe to install</h3>
-          <p>Game code runs in a sandbox on the server and in an isolated frame in the browser. The platform, not the game, decides who sees what.</p>
-        </article>
-        <article class="card tone-green" role="listitem">
-          <h3>Made to be made</h3>
-          <p>Templates, short docs and automatic bot matches catch the typical mistakes of AI-written games before players ever see them.</p>
-        </article>
-      </div>
-      <p class="note">It starts small on purpose: built first for a circle of family and friends. A community registry and moderation come once the platform has proven itself. But anything that would later force a rework of every game is part of the contract from day one: pure rules, the package format, license data in the manifest and isolation in the browser.</p>
     </div>
   </section>
 
   <section class="section" id="how" aria-labelledby="how-title">
     <div class="wrap">
-      <header>
+      <header class="head">
         <h2 id="how-title">How it works</h2>
-        <p>Three kinds of people use Gamehearth. Each of them needs very little.</p>
       </header>
-      <div class="audiences">
-        <article class="card audience tone-cyan" aria-labelledby="players-title">
+      <div class="trio">
+        <article class="card role tone-cyan" aria-labelledby="players-title">
+          <svg class="icon big" aria-hidden="true"><use href="#i-phone"/></svg>
           <h3 id="players-title">Players</h3>
-          <ul class="ticks">
-            <li>Open the server's address and add it to the home screen. It is a web app (PWA): no app store, updates arrive with the server.</li>
-            <li>Join a room with a code, a link or the QR code in the lobby. Guests need no account.</li>
-            <li>Play on phones, tablets and laptops. Party games put the board on a TV, paired with a short code, and turn phones into controllers.</li>
-            <li>Single-player games keep working offline. Notifications say when it's your turn.</li>
-          </ul>
-          <img class="shot phone" src="img/lobby.webp" width="780" height="1960" loading="lazy" decoding="async" alt="A Mau-Mau lobby on a phone: a QR code and the room code to invite others, house-rule options, the players Anna (host) and Ben (guest), an Add bot button and Start match.">
+          <ol class="mini">
+            <li>Open the server's address</li>
+            <li>Join by code or QR</li>
+            <li>Play on phone, laptop or TV</li>
+          </ol>
         </article>
-        <article class="card audience tone-amber" aria-labelledby="operators-title">
+        <article class="card role tone-amber" aria-labelledby="operators-title">
+          <svg class="icon big" aria-hidden="true"><use href="#i-server"/></svg>
           <h3 id="operators-title">Operators</h3>
-          <ul class="ticks">
-            <li>Run one Docker container. Database, backups and installed games live in one volume.</li>
-            <li>A new server has no games. In the admin view you add a catalog and install what you want; updates are a click, and running matches finish on the version they started with.</li>
-            <li>Accounts exist only by invite link. Logins are rate limited, sessions sit in HttpOnly cookies, and every POST and WebSocket is checked against cross-site forgery.</li>
-          </ul>
-          <img class="shot phone" src="img/admin-games.webp" width="780" height="1688" loading="lazy" decoding="async" alt="The admin view on a phone, Games tab: installed games with version, catalog, number of rooms and size, each with a Remove button.">
+          <ol class="mini">
+            <li>Run one container</li>
+            <li>Add a catalog, install games</li>
+            <li>Invite your people</li>
+          </ol>
         </article>
-        <article class="card audience tone-green" aria-labelledby="makers-title">
+        <article class="card role tone-green" aria-labelledby="makers-title">
+          <svg class="icon big" aria-hidden="true"><use href="#i-sparkle"/></svg>
           <h3 id="makers-title">Game makers</h3>
-          <ul class="ticks">
-            <li><code>npx gamehearth new my-game</code> creates a small, complete game plus <code>AGENTS.md</code>, the instructions for your AI agent.</li>
-            <li>Open the folder with the agent of your choice and describe your game. It replaces the example.</li>
-            <li><code>npm run dev</code> shows every seat side by side, with bots and errors worded for the agent.</li>
-            <li><code>npm run check</code> plays hundreds of bot matches; <code>npm run pack</code> builds the package for a catalog.</li>
-          </ul>
-          <pre><code>npx gamehearth new my-game
-cd my-game
-npm run dev</code></pre>
-          <img class="shot phone" src="img/kritzelkiste-draw.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Doodle Box on the phone of the player who draws: the secret word, a simple drawing, the guesses so far and the pencil case.">
+          <ol class="mini">
+            <li>Describe a game to an AI agent</li>
+            <li>Try it with bots</li>
+            <li>Publish to a catalog</li>
+          </ol>
         </article>
+      </div>
+      <div class="strip">
+        <figure class="tone-cyan">
+          <img class="shot phone" src="img/lobby.webp" width="780" height="1960" loading="lazy" decoding="async" alt="A Mau-Mau lobby on a phone: QR code and room code, house-rule options, players Anna and Ben, Add bot and Start match.">
+          <figcaption>Lobby with QR code</figcaption>
+        </figure>
+        <figure class="tv tone-pink">
+          <img class="shot" src="img/lobby-tv.webp" width="1280" height="720" loading="lazy" decoding="async" alt="A TV paired to a Color Fields room: the room code in neon letters, a QR code to join, two players and two bots.">
+          <figcaption>A TV joins by code</figcaption>
+        </figure>
+        <figure class="tone-amber">
+          <img class="shot phone" src="img/admin-games.webp" width="780" height="1688" loading="lazy" decoding="async" alt="The admin view on a phone: installed games with version, catalog, rooms and size.">
+          <figcaption>Admin: games</figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
   <section class="section" id="architecture" aria-labelledby="architecture-title">
     <div class="wrap">
-      <header>
+      <header class="head">
         <h2 id="architecture-title">Architecture</h2>
-        <p>The browser holds the app and, inside it, the game in a locked-down frame. The server holds the truth: accounts, rooms and the game rules, run in a sandbox. Games reach the server as packages from catalogs.</p>
+        <p>The game runs locked in the browser. The rules run sandboxed on the server.</p>
       </header>
       <div class="architecture">
         <svg class="diagram" viewBox="0 0 360 652" role="img" aria-labelledby="diagram-title diagram-desc">
           <title id="diagram-title">Gamehearth architecture</title>
-          <desc id="diagram-desc">A device runs the app, a PWA served by the server. Inside the app the game runs in a sandboxed iframe and talks to the app only through postMessage. The app talks to the platform server over HTTPS and a WebSocket. The server, one Docker container, holds accounts, guests, rooms and catalogs, runs game rules in a QuickJS sandbox inside a worker thread, stores data in SQLite and keeps installed game builds in a games directory. It loads catalog files and game packages over HTTPS from catalogs and releases, for example Git repositories on GitHub.</desc>
+          <desc id="diagram-desc">A device runs the app, a PWA served by the server. Inside the app the game runs in a sandboxed iframe and talks to the app only through postMessage. The app talks to the platform server over HTTPS and a WebSocket. The server, one Docker container, holds accounts, guests, rooms and catalogs, runs game rules in a QuickJS sandbox inside a worker thread, stores data in SQLite and keeps installed game builds in a games directory. It loads catalog files and game packages over HTTPS from catalogs and releases.</desc>
           <defs>
             <marker id="tip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
               <path class="arrow" d="M0 0 10 5 0 10z"/>
@@ -191,14 +191,14 @@ npm run dev</code></pre>
           <text class="t" x="180" y="628" text-anchor="middle">Catalogs and releases</text>
         </svg>
 
-        <div class="tone-pink">
-          <h3 id="move-title" class="steps-title">What happens when you play a card</h3>
-          <ol class="steps" aria-labelledby="move-title">
-            <li>The game's SDK sends the move to the app with <code>postMessage</code>. The app checks the sender, the shape and the size of the message.</li>
-            <li>The app passes it on over the WebSocket. Who you are comes from the session cookie, which the game frame can't read.</li>
-            <li>The server runs the game's rules for this room in its QuickJS sandbox and checks everything that comes back. Turn-based states go to SQLite after every move.</li>
-            <li>The new state has three parts: <code>public</code> for everyone, <code>players[id]</code> for one seat, <code>secret</code> for nobody. The platform cuts each device's view from it.</li>
-            <li>Every device gets its own snapshot, the app hands it to the game frame, and the game draws it.</li>
+        <div class="flow-wrap">
+          <h3 id="move-title">One move, five hops</h3>
+          <ol class="flow" aria-labelledby="move-title">
+            <li class="tone-cyan"><svg class="icon" aria-hidden="true"><use href="#i-card"/></svg><span>You tap a card</span></li>
+            <li class="tone-pink"><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span><code>postMessage</code>, checked</span></li>
+            <li class="tone-violet"><svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg><span>WebSocket to the server</span></li>
+            <li class="tone-green"><svg class="icon" aria-hidden="true"><use href="#i-cube"/></svg><span>Rules run sandboxed</span></li>
+            <li class="tone-amber"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg><span>Each seat sees only its share</span></li>
           </ol>
         </div>
       </div>
@@ -207,213 +207,187 @@ npm run dev</code></pre>
 
   <section class="section" id="components" aria-labelledby="components-title">
     <div class="wrap">
-      <header>
-        <h2 id="components-title">The components, and why</h2>
-        <p>Every part was decided in writing, with the alternatives that lost. These are the short versions; the long ones are in the <a href="https://github.com/hearthbit/gamehearth/blob/main/docs/design.md">design document</a>.</p>
+      <header class="head">
+        <h2 id="components-title">Components</h2>
+        <p>Tap "Why?" for the reasoning.</p>
       </header>
-      <div class="components">
-        <article class="card component tone-amber" aria-labelledby="c-server">
-          <h3 id="c-server">Platform server</h3>
-          <span class="tag">AGPL-3.0</span>
-          <p class="what">TypeScript on Node, shipped as one Docker image: accounts, rooms, catalogs, the game sandbox and the app itself.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>One language for server, SDK, app and games: types are shared, game rules run without translation, and an AI agent can read the platform code too.</li>
-            <li><code>node:sqlite</code>, <code>node:http</code> and <code>ws</code>: nothing to compile, few dependencies.</li>
-            <li>Built as if it were openly on the internet (rate limits, CSRF checks, secure cookies), because security is hard to add later.</li>
-          </ul>
-          <p class="rejected"><strong>Rejected:</strong> Kotlin with GraalJS (more memory, types maintained twice) and Go with an embedded JavaScript engine (a second language, slower realtime ticks).</p>
+      <div class="tiles">
+        <article class="card tile tone-amber" aria-labelledby="c-server">
+          <svg class="icon" aria-hidden="true"><use href="#i-server"/></svg>
+          <h3 id="c-server">Server</h3>
+          <p>One Docker container, TypeScript on Node.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>One language from server to games</li>
+              <li>Nothing native to compile</li>
+              <li>Built for the open internet</li>
+            </ul>
+          </details>
         </article>
-
-        <article class="card component tone-cyan" aria-labelledby="c-app">
-          <h3 id="c-app">The app (PWA)</h3>
-          <span class="tag">AGPL-3.0</span>
-          <p class="what">Preact and Vite, delivered by the server as an installable web app.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>The server address is the whole configuration: no app stores, one icon on the home screen per server, updates come with the server.</li>
-            <li>A small service worker caches only the app shell. Offline, you get a clear message instead of a browser error page.</li>
-            <li>The neon hall respects reduced motion, has a switch for effects and keeps sound off until you turn it on. English and German, per device or per account.</li>
-          </ul>
-          <p class="rejected"><strong>Rejected for now:</strong> a native shell app with a server list. It may come later, wrapped around the same PWA.</p>
+        <article class="card tile tone-cyan" aria-labelledby="c-app">
+          <svg class="icon" aria-hidden="true"><use href="#i-app"/></svg>
+          <h3 id="c-app">App (PWA)</h3>
+          <p>An installable web app, served by the server.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>The address is the whole setup</li>
+              <li>No app store; updates come along</li>
+              <li>Calm mode, sound off by default</li>
+            </ul>
+          </details>
         </article>
-
-        <article class="card component tone-pink" aria-labelledby="c-isolation">
-          <h3 id="c-isolation">Isolation in the browser</h3>
-          <p class="what">Every game runs in an iframe with <code>sandbox</code> but without <code>allow-same-origin</code>, under a strict content security policy: no requests, no cookies, no storage.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>On the platform's own origin a game could read the login and act as the player, or as an admin.</li>
-            <li>The SDK talks to the app only via <code>postMessage</code>, and the app checks every message.</li>
-            <li>Nothing extra to set up: a self-hoster needs no second domain and no extra certificate.</li>
-            <li>The known gap is WebRTC, which no CSP closes in every browser. That is why adding a catalog means trusting it, and the dialog says so.</li>
-          </ul>
-          <p class="rejected"><strong>Rejected:</strong> a subdomain per game, which would demand wildcard DNS and wildcard certificates from everyone who hosts.</p>
+        <article class="card tile tone-pink" aria-labelledby="c-isolation">
+          <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
+          <h3 id="c-isolation">Browser isolation</h3>
+          <p>Every game in a sandboxed iframe.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>Games can't touch your login</li>
+              <li>No network, only checked messages</li>
+              <li>No extra domain to set up</li>
+            </ul>
+          </details>
         </article>
-
-        <article class="card component tone-violet" aria-labelledby="c-reducer">
-          <h3 id="c-reducer">Game rules as a reducer</h3>
-          <p class="what">Multiplayer rules are one pure function, <code>(state, action) → newState</code>, and the server runs it.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>The server is the authority: no cheating, no host device the match depends on, and turn-based matches can last for days.</li>
-            <li>No I/O, no clock, no <code>Math.random</code>. Time and randomness come from the SDK, so every match can be replayed from its seed and moves.</li>
-            <li>The state has a fixed shape, and the platform filters it. A hand-written "what may this player see" function can leak silently, and AI-written ones often do.</li>
-          </ul>
-          <p class="rejected"><strong>Rejected:</strong> a free <code>playerView</code> function per game. It can be added later for special cases, on top.</p>
+        <article class="card tile tone-violet" aria-labelledby="c-rules">
+          <svg class="icon" aria-hidden="true"><use href="#i-rules"/></svg>
+          <h3 id="c-rules">Rules as reducers</h3>
+          <p>A pure <code>(state, action) → state</code>.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>The server referees: no cheating</li>
+              <li>The platform filters hidden cards</li>
+              <li>Every match can be replayed</li>
+            </ul>
+          </details>
         </article>
-
-        <article class="card component tone-green" aria-labelledby="c-sandbox">
-          <h3 id="c-sandbox">Sandbox on the server</h3>
-          <p class="what">Game code runs in QuickJS compiled to WebAssembly: one sandbox per room, all inside one worker thread.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>An endless loop in one game must not freeze the server. The main thread watches a heartbeat and restarts the worker after a hard time limit.</li>
-            <li>Each room has its own module with capped memory, so a crash stays in its room. Builds that keep failing are put in quarantine.</li>
-            <li>No native dependency. The server trusts nothing that comes out of the sandbox and checks its size, depth and fields.</li>
-          </ul>
-          <p class="rejected"><strong>Rejected:</strong> a container per game (too much memory and storage for a small server) and a pool of V8 workers (no memory limit, access to Node).</p>
+        <article class="card tile tone-green" aria-labelledby="c-sandbox">
+          <svg class="icon" aria-hidden="true"><use href="#i-cube"/></svg>
+          <h3 id="c-sandbox">Server sandbox</h3>
+          <p>QuickJS in WebAssembly, one per room.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>Endless loops can't freeze the server</li>
+              <li>Memory capped per room</li>
+              <li>No native dependency</li>
+            </ul>
+          </details>
         </article>
-
-        <article class="card component tone-cyan" aria-labelledby="c-sdk">
-          <h3 id="c-sdk">SDK</h3>
-          <span class="tag">MIT · @gamehearth/sdk</span>
-          <p class="what"><code>defineGame</code> for the rules, <code>connect</code> and <code>connectSolo</code> for the game's screen, plus texts in several languages, bots and sound.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>Short and complete docs: the smaller the API, the less often an AI agent makes things up.</li>
-            <li><code>move()</code> answers "ok" or an error code, and the app shows reconnects, errors and rate limits itself. Games hardly handle errors.</li>
-            <li>MIT, so every game picks its own license. Any web engine works; the templates use Phaser 4 with Vite and TypeScript.</li>
-          </ul>
-          <p class="rejected"><strong>Rejected:</strong> an SDK made only of events. Every game would build its own error display, and AI code easily forgets it. A copyleft SDK would force copyleft on every game.</p>
+        <article class="card tile tone-cyan" aria-labelledby="c-sdk">
+          <svg class="icon" aria-hidden="true"><use href="#i-terminal"/></svg>
+          <h3 id="c-sdk">SDK and dev tool</h3>
+          <p><code>new</code>, <code>dev</code>, <code>check</code>, <code>pack</code> and three templates.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>Small API, fewer AI mistakes</li>
+              <li>Templates are complete games</li>
+              <li>No built-in AI: bring your own</li>
+            </ul>
+          </details>
         </article>
-
-        <article class="card component tone-amber" aria-labelledby="c-devtool">
-          <h3 id="c-devtool">Dev tool, templates and starter</h3>
-          <span class="tag">MIT · gamehearth</span>
-          <p class="what"><code>new</code>, <code>dev</code>, <code>check</code>, <code>pack</code> and <code>catalog add</code>, with three templates: Card Duel (turn-based), Tag (realtime, TV and phones) and Mushroom Hunt (single player).</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>There is no LLM in the platform. You bring any agent; <code>AGENTS.md</code> teaches it the contract and points to the docs that update with the SDK.</li>
-            <li><code>new</code> asks no questions: often an agent is typing, and agents get stuck on prompts.</li>
-            <li>Each template is a small, complete game, because agents copy patterns from code more readily than from docs.</li>
-            <li><code>dev</code> shows all seats at once, so leaks stand out, and replays the match when the rules change. It uses the same sandbox as the server.</li>
-          </ul>
+        <article class="card tile tone-pink" aria-labelledby="c-check">
+          <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+          <h3 id="c-check">Bot-tested</h3>
+          <p><code>check</code> plays hundreds of bot matches.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>Finds crashes, endless games, leaks</li>
+              <li>Always plays fewest and most players</li>
+              <li>Errors worded for AI agents</li>
+            </ul>
+          </details>
         </article>
-
-        <article class="card component tone-pink" aria-labelledby="c-check">
-          <h3 id="c-check"><code>check</code>: bot matches and leak detection</h3>
-          <p class="what">Plays hundreds of matches with random bots for every allowed player count and every option, in Node and again in the server's QuickJS.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>It finds crashes, matches that never end, non-determinism, and data from <code>secret</code> or another player's hand that ends up where it doesn't belong.</li>
-            <li>The edges, the smallest and largest player count, break most often in AI code, so they are always played.</li>
-            <li>The messages are worded so that an agent can fix them directly. <code>pack</code> only builds after a green <code>check</code>.</li>
-          </ul>
+        <article class="card tile tone-green" aria-labelledby="c-catalogs">
+          <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
+          <h3 id="c-catalogs">Catalogs</h3>
+          <p>Games as packages, listed in a <code>catalog.json</code>.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>Checked and test-played before install</li>
+              <li>Anyone can run a catalog</li>
+              <li>Updates only on a click</li>
+            </ul>
+          </details>
         </article>
-
-        <article class="card component tone-green" aria-labelledby="c-catalogs">
-          <h3 id="c-catalogs">Game packages and catalogs</h3>
-          <span class="tag">catalog: CC0</span>
-          <p class="what">A game is a ZIP built by <code>pack</code>. A catalog is a <code>catalog.json</code> in a Git repo, an index with versions, sizes and checksums, much like F-Droid.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>The server installs only ready-built packages and checks the checksum, the manifest, loading in the sandbox and a trial bot match with the fewest and the most players.</li>
-            <li>A fresh server has no catalog. Adding one is a deliberate act of trust, updates install on a click, and an older version can be picked to roll back.</li>
-            <li>The catalog is only an index: every game keeps its own repo, license and history, and anyone can run a catalog of their own; the Gamehearth catalog lists only the project's own games for now.</li>
-          </ul>
-          <p class="rejected"><strong>Rejected:</strong> the server cloning Git repos (git in the image, more attack surface) and installing updates automatically (a broken release would reach everyone).</p>
+        <article class="card tile tone-violet" aria-labelledby="c-realtime">
+          <svg class="icon" aria-hidden="true"><use href="#i-tv"/></svg>
+          <h3 id="c-realtime">Realtime and TV</h3>
+          <p>20 ticks a second; phones steer, the TV shows.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>Inputs are ordinary moves</li>
+              <li>The TV needs no account</li>
+              <li>Pauses when a phone drops out</li>
+            </ul>
+          </details>
         </article>
-
-        <article class="card component tone-violet" aria-labelledby="c-realtime">
-          <h3 id="c-realtime">Realtime with a TV and phones</h3>
-          <p class="what">Realtime games add <code>tick(state, dt, ctx)</code> at a fixed 20 Hz. Inputs from the phones are ordinary moves, collected until the next tick.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>One concept, moves, keeps <code>check</code>, bots and leak detection working unchanged.</li>
-            <li>A TV pairs with a code, needs no account and sees only what everyone sees. It takes no seat.</li>
-            <li>The client SDK smooths 20 snapshots a second into fluid frames, and a match pauses when a phone or the TV drops out.</li>
-          </ul>
-          <p class="rejected"><strong>Rejected for now:</strong> client-side prediction with rollback. Possible, since rules are deterministic, but it is the hardest network code and much harder to debug for AI developers.</p>
-          <img class="shot wide" src="img/lobby-tv.webp" width="1280" height="720" loading="lazy" decoding="async" alt="A TV paired to a Color Fields room: the room code in neon letters, a large QR code to join, the players Anna and Ben and two bots, and the chosen options.">
-        </article>
-
-        <article class="card component tone-cyan" aria-labelledby="c-solo">
-          <h3 id="c-solo">Single player, offline</h3>
-          <p class="what">Single-player games need no reducer: any engine and any game loop, plus a save and best scores from the SDK.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>Saves go to the device first and to the server when it is reachable: nothing is lost offline, and you can continue on another device.</li>
-            <li>Sandboxed frames bypass the service worker, so the app preloads every single-player game into the browser's HTTP cache.</li>
-            <li>The platform draws the leaderboard itself, so other players' names never reach game code.</li>
-          </ul>
-        </article>
-
-        <article class="card component tone-amber" aria-labelledby="c-bots">
-          <h3 id="c-bots">Bots, playing on and sound</h3>
-          <p class="what">An optional <code>bot</code> function fills seats in the lobby or takes over a seat ("I have to go"). <code>game.sound()</code> plays through the platform.</p>
-          <p class="label">Why</p>
-          <ul class="ticks">
-            <li>Only games with a real bot offer bots: Mau-Mau plays sensibly, a drawing game offers none rather than random scribbles.</li>
-            <li>Sounds are synthesized with Web Audio in the app's own window: no sound files, no license questions, and the TV can play them too.</li>
-            <li>Sound is off by default, with one switch per device.</li>
-          </ul>
+        <article class="card tile tone-amber" aria-labelledby="c-extras">
+          <svg class="icon" aria-hidden="true"><use href="#i-bot"/></svg>
+          <h3 id="c-extras">Solo, bots, sound</h3>
+          <p>Offline play, bots for empty seats, synth sound.</p>
+          <details>
+            <summary>Why?</summary>
+            <ul>
+              <li>Saves sync once you're back online</li>
+              <li>Bots only where they play well</li>
+              <li>No sound files, no license worries</li>
+            </ul>
+          </details>
         </article>
       </div>
+      <p class="more"><a href="https://github.com/hearthbit/gamehearth/blob/main/docs/design.md">Full reasoning and rejected alternatives: design document</a></p>
     </div>
   </section>
 
   <section class="section" id="games" aria-labelledby="games-title">
     <div class="wrap">
-      <header>
-        <h2 id="games-title">Five games to start with</h2>
-        <p>All five are in the public <a href="https://github.com/hearthbit/gamehearth-catalog">Gamehearth catalog</a>. Each has its own repository and reaches a server the way any community game would: a release with a package, an entry in the catalog, a click in the admin view. Code under MIT, graphics under CC0. The screenshots on this page come from a fresh local server with demo players.</p>
+      <header class="head">
+        <h2 id="games-title">Five games</h2>
+        <p>All in the <a href="https://github.com/hearthbit/gamehearth-catalog">Gamehearth catalog</a>. Shown with demo players.</p>
       </header>
-      <div class="games">
-        <article class="card game full split tone-pink" aria-labelledby="g-farbfelder">
-          <div class="pair">
-            <img class="shot tv" src="img/farbfelder-tv.webp" width="1280" height="720" loading="lazy" decoding="async" alt="Color Fields on the TV: a grid painted in four colors by Anna, Ben and two bots, with the remaining time and a scoreboard of squares.">
-            <img class="shot phone" src="img/farbfelder-phone.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Color Fields on Anna's phone: her color, her squares and rank, a large d-pad and a Splat button.">
-          </div>
-          <div class="text">
-            <h3 id="g-farbfelder">Color Fields <small>2–8 players · realtime</small></h3>
-            <p>The TV shows the field, the phones are d-pads. Run across the grid, paint every square you step on and splat a 3×3 blob now and then. When 90 seconds are up, the largest area wins.</p>
-          </div>
-        </article>
-
+      <article class="card feature tone-pink" aria-labelledby="g-colorfields">
+        <div class="feature-shots">
+          <img class="shot tvshot" src="img/farbfelder-tv.webp" width="1280" height="720" loading="lazy" decoding="async" alt="Color Fields on the TV: a grid painted in four colors by two players and two bots, with the remaining time and a scoreboard.">
+          <img class="shot phone overlay" src="img/farbfelder-phone.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Color Fields on a phone: the player's color, squares and rank, a d-pad and a Splat button.">
+        </div>
+        <div class="feature-text">
+          <h3 id="g-colorfields">Color Fields</h3>
+          <p>Run, paint, splat. Biggest area wins.</p>
+          <p class="chips"><span>2–8 players</span><span>realtime</span><span>TV + phones</span></p>
+        </div>
+      </article>
+      <div class="gallery">
         <article class="card game tone-cyan" aria-labelledby="g-maumau">
-          <img class="shot phone" src="img/mau-mau.webp" width="780" height="1688" loading="lazy" decoding="async" alt="A Mau-Mau match on Anna's phone: Ben's hidden cards at the top, the draw pile and the discard pile in the middle, and Anna's hand at the bottom with the playable cards highlighted.">
-          <div class="text">
-            <h3 id="g-maumau">Mau-Mau <small>card game · 2–6 players · turn-based</small></h3>
-            <p>The classic shedding game, everyone on their own phone. House rules are options in the lobby, and a bot that plays sensibly fills empty seats.</p>
-          </div>
+          <img class="shot phone" src="img/mau-mau.webp" width="780" height="1688" loading="lazy" decoding="async" alt="A Mau-Mau match on a phone: the opponent's hidden cards, the draw and discard piles, and the player's hand with playable cards highlighted.">
+          <h3 id="g-maumau">Mau-Mau</h3>
+          <p>The classic card game, with house rules.</p>
+          <p class="chips"><span>2–6</span><span>turn-based</span></p>
         </article>
-
-        <article class="card game tone-amber" aria-labelledby="g-mauerbrecher">
-          <img class="shot phone" src="img/mauerbrecher.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Wall Breaker on a phone: level 1 of 10, the points and three hearts, a wall of bricks, the ball and the paddle.">
-          <div class="text">
-            <h3 id="g-mauerbrecher">Wall Breaker <small>single player</small></h3>
-            <p>Ball and paddle against ten walls of bricks, with power-ups. Plays offline; the save and best score follow you to your other devices.</p>
-          </div>
+        <article class="card game tone-violet" aria-labelledby="g-doodlebox">
+          <img class="shot phone" src="img/kritzelkiste-draw.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Doodle Box on the phone of the player who draws: the secret word, the scores, a drawing, and the pencils and tools.">
+          <h3 id="g-doodlebox">Doodle Box</h3>
+          <p>One draws, everyone guesses.</p>
+          <p class="chips"><span>2–10</span><span>party</span></p>
         </article>
-
-        <article class="card game tone-green" aria-labelledby="g-angelteich">
-          <img class="shot phone" src="img/angelteich.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Fishing Pond on a phone: a round of fishing against Ben and a bot, the latest catch, coins, bait and a Cast your line button.">
-          <div class="text">
-            <h3 id="g-angelteich">Fishing Pond <small>1–4 players · turn-based</small></h3>
-            <p>Take turns at the pond: catch fish, sell them at the shop, buy better rods. The collection book lives in your profile and grows from match to match.</p>
-          </div>
+        <article class="card game tone-green" aria-labelledby="g-fishingpond">
+          <img class="shot phone" src="img/angelteich.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Fishing Pond on a phone: a round of fishing with the latest catch, coins, bait and a Cast your line button.">
+          <h3 id="g-fishingpond">Fishing Pond</h3>
+          <p>Fish, sell, upgrade, fill your book.</p>
+          <p class="chips"><span>1–4</span><span>turn-based</span></p>
         </article>
-
-        <article class="card game full split tone-violet" aria-labelledby="g-kritzelkiste">
-          <div class="pair">
-            <img class="shot phone" src="img/kritzelkiste-draw.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Doodle Box on the phone of the player who draws: the secret word, the players' scores, the drawing and the pencils and tools.">
-            <img class="shot phone" src="img/kritzelkiste-guess.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Doodle Box on the phone of a player who guesses: the same drawing, empty boxes for the letters of the word, crossed-out wrong guesses, a note that another player guessed it, and the guess field.">
-          </div>
-          <div class="text">
-            <h3 id="g-kritzelkiste">Doodle Box <small>2–10 players · party game</small></h3>
-            <p>One player draws a word with a finger, everyone else watches the picture appear on their own phone and guesses. The faster you guess, the more points you get. Players can add their own words, and a TV is optional.</p>
-          </div>
+        <article class="card game tone-amber" aria-labelledby="g-wallbreaker">
+          <img class="shot phone" src="img/mauerbrecher.webp" width="780" height="1688" loading="lazy" decoding="async" alt="Wall Breaker on a phone: level 1 of 10, points and hearts, a wall of bricks, the ball and the paddle.">
+          <h3 id="g-wallbreaker">Wall Breaker</h3>
+          <p>Ten walls of bricks. Works offline.</p>
+          <p class="chips"><span>solo</span><span>offline</span></p>
         </article>
       </div>
     </div>
@@ -421,110 +395,63 @@ npm run dev</code></pre>
 
   <section class="section" id="make" aria-labelledby="make-title">
     <div class="wrap">
-      <header>
+      <header class="head">
         <h2 id="make-title">Make a game</h2>
-        <p>You need Node.js 22 or newer and, if you don't program, an AI agent such as Claude Code, Cursor or Copilot.</p>
+        <p>Open the folder with any AI agent and describe your game.</p>
       </header>
-      <div class="columns">
-        <article class="card tone-green" aria-labelledby="start-title">
-          <h3 id="start-title">Get started</h3>
-          <pre><code>npx gamehearth new my-game
+      <ol class="steps-row">
+        <li class="card tone-green"><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg><strong>new</strong><span>start from a template</span></li>
+        <li class="card tone-cyan"><svg class="icon" aria-hidden="true"><use href="#i-monitor"/></svg><strong>dev</strong><span>play every seat at once</span></li>
+        <li class="card tone-pink"><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg><strong>check &amp; pack</strong><span>bot-tested package</span></li>
+      </ol>
+      <pre class="tone-green"><code>npx gamehearth new my-game
 cd my-game
 npm run dev</code></pre>
-          <p>Then open the address <code>dev</code> prints. All players sit there side by side; play each seat yourself or hand it to a bot. Open the folder with your agent and describe the game you want.</p>
-          <p class="muted">For a party game with a TV add <code>--template realtime</code>, for a single-player game <code>--template single</code>. On GitHub, the starter repository is the same thing as a template.</p>
-        </article>
-        <article class="card tone-cyan" aria-labelledby="publish-title">
-          <h3 id="publish-title">Check and publish</h3>
-          <pre><code>npm run check
-npm run pack
-npx gamehearth catalog add catalog.json &lt;package-url&gt; --name "My catalog"</code></pre>
-          <p><code>check</code> plays the game the way the platform will, <code>pack</code> builds the package, and the repo's CI attaches it to a release. List it in your own <code>catalog.json</code>, and any server can add that catalog.</p>
-          <ul class="links">
-            <li><a href="https://github.com/hearthbit/gamehearth-starter">Starter repository</a></li>
-            <li><a href="https://www.npmjs.com/package/gamehearth">gamehearth on npm</a></li>
-            <li><a href="https://www.npmjs.com/package/@gamehearth/sdk">@gamehearth/sdk on npm</a></li>
-          </ul>
-        </article>
-      </div>
+      <p class="chips links"><a href="https://github.com/hearthbit/gamehearth-starter">Starter repo</a><a href="https://www.npmjs.com/package/gamehearth">npm: gamehearth</a><a href="https://www.npmjs.com/package/@gamehearth/sdk">npm: @gamehearth/sdk</a></p>
     </div>
   </section>
 
   <section class="section" id="host" aria-labelledby="host-title">
     <div class="wrap">
-      <header>
+      <header class="head">
         <h2 id="host-title">Host it</h2>
-        <p>Any machine with Docker will do. The image brings the app and the server, but no games.</p>
+        <p>One container, anywhere Docker runs.</p>
       </header>
-      <div class="columns">
-        <article class="card tone-amber" aria-labelledby="run-title">
-          <h3 id="run-title">Build and run</h3>
-          <pre><code>git clone https://github.com/hearthbit/gamehearth.git
+      <pre class="tone-amber"><code>git clone https://github.com/hearthbit/gamehearth.git
 cd gamehearth
 docker build -t gamehearth .
 docker run -p 8080:8080 \
   -v gamehearth-data:/data gamehearth</code></pre>
-          <p>Database, backups and installed games are kept under <code>/data</code>.</p>
-        </article>
-        <article class="card tone-amber" aria-labelledby="first-title">
-          <h3 id="first-title">First steps</h3>
-          <ul class="ticks">
-            <li>On first start the log shows a one-time setup link (<code>docker logs &lt;container&gt;</code>). Append it to the server's address and open it to create the first admin.</li>
-            <li>In Admin → Games, add the Gamehearth catalog and install games. The server needs outgoing HTTPS for that.</li>
-            <li>Invite people with invite links; guests join rooms through a link, a code or the QR code.</li>
-            <li>To reach it from outside, put it behind a reverse proxy with HTTPS and set <code>-e TRUST_PROXY=1</code>.</li>
-          </ul>
-        </article>
-      </div>
+      <p class="after">Then open the setup link from the log and add the Gamehearth catalog.</p>
     </div>
   </section>
 
   <section class="section" id="licenses" aria-labelledby="licenses-title">
     <div class="wrap">
-      <header>
+      <header class="head">
         <h2 id="licenses-title">Licenses</h2>
-        <p>The copyright notice everywhere is "The Gamehearth contributors".</p>
       </header>
-      <div class="columns">
-        <div class="card tone-violet">
-          <table>
-            <caption class="muted">Who may do what with which part</caption>
-            <thead>
-              <tr><th scope="col">Part</th><th scope="col">License</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Server and app (PWA client)</td><td>AGPL-3.0</td></tr>
-              <tr><td>SDK, dev tool and templates</td><td>MIT</td></tr>
-              <tr><td>The five games: code</td><td>MIT</td></tr>
-              <tr><td>The five games: graphics</td><td>CC0</td></tr>
-              <tr><td>The Gamehearth catalog</td><td>CC0</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card tone-violet">
-          <ul class="ticks">
-            <li><strong>AGPL for the platform:</strong> whoever runs a modified platform as a service has to share the changes.</li>
-            <li><strong>MIT for SDK, dev tool and templates:</strong> games may use any license. A copyleft SDK would force copyleft on every game.</li>
-            <li><strong>Games in a catalog:</strong> code under an OSI license, graphics and sound under CC0, CC-BY or CC-BY-SA. The manifest states both, and <code>check</code> verifies it.</li>
-          </ul>
-        </div>
-      </div>
+      <ul class="badges">
+        <li class="tone-amber"><b>AGPL-3.0</b><span>server and app</span></li>
+        <li class="tone-cyan"><b>MIT</b><span>SDK, dev tool, templates</span></li>
+        <li class="tone-green"><b>MIT + CC0</b><span>the five games</span></li>
+        <li class="tone-violet"><b>CC0</b><span>catalog</span></li>
+      </ul>
     </div>
   </section>
 </main>
 
 <footer class="footer">
   <div class="wrap">
-    <ul class="links">
+    <ul class="footer-links">
       <li><a href="https://github.com/hearthbit/gamehearth">Platform</a></li>
       <li><a href="https://github.com/hearthbit/gamehearth-starter">Starter</a></li>
       <li><a href="https://github.com/hearthbit/gamehearth-catalog">Catalog</a></li>
-      <li><a href="https://www.npmjs.com/package/gamehearth">gamehearth (npm)</a></li>
-      <li><a href="https://www.npmjs.com/package/@gamehearth/sdk">@gamehearth/sdk (npm)</a></li>
+      <li><a href="https://www.npmjs.com/package/gamehearth">gamehearth</a></li>
+      <li><a href="https://www.npmjs.com/package/@gamehearth/sdk">@gamehearth/sdk</a></li>
       <li><a href="https://github.com/hearthbit/gamehearth/blob/main/docs/design.md">Design document</a></li>
     </ul>
-    <p>© The Gamehearth contributors. Font: Tilt Neon by The Tilt Project Authors, <a href="fonts/OFL.txt">SIL Open Font License 1.1</a>.</p>
-    <p>This page sets no cookies, runs no scripts and loads nothing from other servers.</p>
+    <p>© The Gamehearth contributors · Font: Tilt Neon, <a href="fonts/OFL.txt">SIL OFL 1.1</a> · No cookies, no scripts, no third parties.</p>
   </div>
 </footer>
 </body>
