@@ -106,17 +106,28 @@ export {
   maxMusicNameLength,
   maxMusicNotes,
   maxMusicNotesPerSecond,
+  maxMusicPolyphony,
   maxMusicSeconds,
   maxMusicVoices,
   minMusicBpm,
   musicInstruments,
+  musicPolyphony,
   musicSeconds,
   readTrack,
   trackLabel,
   trackProblem,
 } from "./music";
 export type { MusicInstrument, MusicNote, MusicTrack, MusicVoice } from "./music";
-export { createMusicPlayer, musicCrossfadeSeconds, musicLookaheadSeconds, musicPeakGain, musicTickMs } from "./music-player";
+export {
+  createMusicPlayer,
+  musicChangeSeconds,
+  musicCrossfadeSeconds,
+  musicLimiter,
+  musicLookaheadSeconds,
+  musicMasterGain,
+  musicPeakGain,
+  musicTickMs,
+} from "./music-player";
 export type {
   AudioBufferLike,
   AudioBufferSourceNodeLike,
@@ -124,6 +135,7 @@ export type {
   AudioNodeLike,
   AudioParamLike,
   BiquadFilterNodeLike,
+  DynamicsCompressorNodeLike,
   GainNodeLike,
   MusicPlayer,
   MusicPlayerOptions,

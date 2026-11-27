@@ -12,7 +12,7 @@ import { SoloScreen } from "../src/screens/solo";
 import { TvScreen } from "../src/screens/tv";
 import { SessionContext, type SessionValue } from "../src/session";
 import { forgetSoloSessions } from "../src/solo-service";
-import { sound, toggleSound } from "../src/sound";
+import { playSound, sound, toggleSound } from "../src/sound";
 import { setLanguage } from "../src/texts";
 import { MusicSetting } from "../src/ui/switches";
 
@@ -57,6 +57,7 @@ class Gain extends Node {
 let audio: FakeContext | undefined;
 const notes: Note[] = [];
 const gains: Gain[] = [];
+const compressors: Node[] = [];
 
 class FakeContext {
   state = "suspended";
@@ -97,6 +98,11 @@ class FakeContext {
   createPeriodicWave() {
     return {};
   }
+  createDynamicsCompressor() {
+    const node = Object.assign(new Node(), { threshold: new Param(), knee: new Param(), ratio: new Param(), attack: new Param(), release: new Param() });
+    compressors.push(node);
+    return node;
+  }
 }
 
 const forest: MusicTrack = { name: "Wald", bpm: 120, beats: 2, voices: [{ instrument: "sine", notes: [{ freq: 523, at: 0, length: 1 }, { freq: 523, at: 1, length: 1 }] }] };
@@ -106,8 +112,12 @@ function heard(freq: number): number {
   return notes.filter((note) => note.freq === freq).length;
 }
 
+function isMaster(node: unknown): boolean {
+  return node instanceof Gain && node.outputs.some((output) => compressors.includes(output as Node));
+}
+
 function tracks(): Gain[] {
-  return gains.filter((gain) => audio !== undefined && gain.outputs.includes(audio.destination) && gain.gain.events[1]?.[0] === "linear" && gain.gain.events[1][1] === 1);
+  return gains.filter((gain) => gain.outputs.some(isMaster) && gain.gain.events[1]?.[0] === "linear" && gain.gain.events[1][1] === 1);
 }
 
 function lastRamp(gain: Gain | undefined): number | undefined {
@@ -255,9 +265,9 @@ describe("Music on the game page", () => {
     await act(async () => (root.querySelector("[aria-haspopup=menu]") as HTMLButtonElement).click());
     await select(root, "Ton");
     expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: true, music: true });
-    expect(heard(523)).toBe(1);
+    expect(heard(523)).toBe(3);
     advance(2);
-    expect(heard(523)).toBe(5);
+    expect(heard(523)).toBe(7);
     expect(playingTrack()?.name).toBe("Wald");
 
     fromGame(game, { gamehearth: 1, type: "music", track: JSON.parse(JSON.stringify(forest)) as MusicTrack });
@@ -267,7 +277,7 @@ describe("Music on the game page", () => {
     const [old, next] = tracks();
     expect(lastRamp(old)).toBe(0);
     expect(lastRamp(next)).toBe(1);
-    expect(heard(784)).toBe(1);
+    expect(heard(784)).toBe(2);
     advance(2);
     expect(old?.disconnected).toBe(true);
     const before = heard(523);
@@ -334,7 +344,8 @@ describe("Music on the game page", () => {
     expect(playingTrack()?.name).toBe("Nacht");
     unmount();
     expect(playingTrack()).toBeNull();
-    expect(lastRamp(tracks().at(-1))).toBe(0);
+    advance(0.4);
+    expect(tracks().filter((gain) => !gain.disconnected).map(lastRamp)).toEqual([0]);
   });
 
   it("names the switch in English", async () => {
@@ -357,6 +368,68 @@ describe("Music on the game page", () => {
   });
 });
 
+describe("Review 17: music on the platform", () => {
+  it("lets a frame that sends 500 tracks in a row keep at most two tracks alive, and plays the latest after 300 ms", () => {
+    toggleSound(true);
+    const root = mount(play(room()));
+    const game = attach(root.querySelector("iframe"));
+    fromGame(game, { gamehearth: 1, type: "ready" });
+    const before = tracks().length;
+    for (let index = 0; index < 500; index++) {
+      fromGame(game, { gamehearth: 1, type: "music", track: index % 2 === 0 ? forest : night });
+    }
+    expect(tracks().length - before).toBe(1);
+    expect(tracks().filter((gain) => !gain.disconnected).length).toBeLessThanOrEqual(2);
+    advance(0.4);
+    expect(tracks().length - before).toBe(2);
+    expect(tracks().filter((gain) => !gain.disconnected).length).toBeLessThanOrEqual(2);
+    expect(playingTrack()?.name).toBe("Nacht");
+    expect(heard(784)).toBeGreaterThan(0);
+  });
+
+  it("resumes an interrupted audio context, as Safari leaves it after the page was in the background", () => {
+    toggleSound(true);
+    expect(audio).toBeDefined();
+    (audio as FakeContext).state = "interrupted";
+    playSound("coin");
+    expect(audio?.state).toBe("running");
+  });
+
+  it("creates and resumes the TV's audio on every click on its Sound or Music switch, also when it turns it off", async () => {
+    toggleSound(true);
+    const { root, socket } = await tv();
+    act(() => socket.receive({ type: "pairing", code: "ABCD-EFGH", expiresAt: Date.now() + 600_000 }));
+    for (const label of ["Musik", "Ton"]) {
+      (audio as FakeContext).state = "suspended";
+      act(() => root.querySelector<HTMLButtonElement>(`[data-testid=tv-pairing] button[aria-label=${label}]`)?.click());
+      expect(audio?.state, label).toBe("running");
+    }
+    expect(localStorage.getItem("gamehearth.music")).toBe("off");
+    expect(localStorage.getItem("gamehearth.sound")).toBe("off");
+  });
+
+  it("has the Sound and Music switches in the TV's lobby too, so music can be turned off between rounds", async () => {
+    const { root, socket } = await tv();
+    const lobby: ScreenView = {
+      code: "ABC234",
+      screen: 7,
+      game: { ...mauMau, roles: ["player", "screen"], screenOptional: true },
+      status: "lobby",
+      round: 1,
+      players: { min: 2, max: 6 },
+      maxMembers: 6,
+      members: room().members.map((member) => ({ ...member, you: false })),
+      screens: [{ id: 7, connected: true }],
+    };
+    act(() => socket.receive({ type: "screen-room", room: lobby }));
+    const labels = [...root.querySelectorAll<HTMLButtonElement>("[data-testid=tv-lobby] button")].map((button) => button.getAttribute("aria-label"));
+    expect(labels).toContain("Ton");
+    expect(labels.indexOf("Musik")).toBe(labels.indexOf("Ton") + 1);
+    act(() => root.querySelector<HTMLButtonElement>("[data-testid=tv-lobby] button[aria-label=Musik]")?.click());
+    expect(localStorage.getItem("gamehearth.music")).toBe("off");
+  });
+});
+
 describe("Music before the first tap", () => {
   it("waits for user activation and then starts on its own", async () => {
     vi.resetModules();
@@ -371,7 +444,7 @@ describe("Music before the first tap", () => {
     Object.defineProperty(navigator, "userActivation", { configurable: true, value: { hasBeenActive: true } });
     vi.advanceTimersByTime(musicUnlockPollMs);
     expect(fresh.playingTrack()?.name).toBe("Wald");
-    expect(heard(523)).toBe(1);
+    expect(heard(523)).toBe(3);
     channel.close();
     fresh.stopMusic();
     delete (navigator as { userActivation?: unknown }).userActivation;
@@ -460,7 +533,7 @@ describe("Music on the TV", () => {
     fromGame(game, { gamehearth: 1, type: "ready" });
     expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: true, music: true }]);
     fromGame(game, { gamehearth: 1, type: "music", track: night });
-    expect(heard(784)).toBe(1);
+    expect(heard(784)).toBe(2);
     act(() => music.set(false));
     expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: true, music: false });
     expect(playingTrack()).toBeNull();
@@ -511,7 +584,7 @@ describe("Music on the single-player page", () => {
     fromGame(game, { gamehearth: 1, type: "music", track: forest });
     await select(root, "Ton");
     expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: true, music: true });
-    expect(heard(523)).toBe(1);
+    expect(heard(523)).toBe(3);
     await select(root, "Musik");
     expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: true, music: false });
     expect(playingTrack()).toBeNull();

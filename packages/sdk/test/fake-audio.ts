@@ -107,6 +107,17 @@ export class FakeSource extends FakeNode implements AudioBufferSourceNodeLike {
   }
 }
 
+export class FakeCompressor extends FakeNode {
+  readonly threshold = new FakeParam(-24);
+  readonly knee = new FakeParam(30);
+  readonly ratio = new FakeParam(12);
+  readonly attack = new FakeParam(0.003);
+  readonly release = new FakeParam(0.25);
+  constructor() {
+    super("compressor");
+  }
+}
+
 export class FakeContext implements AudioContextLike {
   currentTime = 0;
   readonly sampleRate = 100;
@@ -114,6 +125,9 @@ export class FakeContext implements AudioContextLike {
   started: (FakeOscillator | FakeSource)[] = [];
   gains: FakeGain[] = [];
   filters: FakeFilter[] = [];
+  compressors: FakeCompressor[] = [];
+  waveArguments: unknown[][] = [];
+  failOscillators = false;
   buffers = 0;
   waves = 0;
   createGain(): FakeGain {
@@ -122,7 +136,15 @@ export class FakeContext implements AudioContextLike {
     return node;
   }
   createOscillator(): FakeOscillator {
+    if (this.failOscillators) {
+      throw new Error("no more oscillators");
+    }
     return new FakeOscillator(this);
+  }
+  createDynamicsCompressor(): FakeCompressor {
+    const node = new FakeCompressor();
+    this.compressors.push(node);
+    return node;
   }
   createBiquadFilter(): FakeFilter {
     const node = new FakeFilter();
@@ -137,12 +159,21 @@ export class FakeContext implements AudioContextLike {
   createBufferSource(): FakeSource {
     return new FakeSource(this);
   }
-  createPeriodicWave(): object {
+  createPeriodicWave(real: unknown, imag: unknown): object {
     this.waves += 1;
+    this.waveArguments.push([real, imag]);
     return { periodic: true };
   }
+  master(): FakeGain | undefined {
+    const compressor = this.compressors.find((node) => node.outputs.includes(this.destination));
+    return this.gains.find((gain) => compressor !== undefined && gain.outputs.includes(compressor));
+  }
   outs(): FakeGain[] {
-    return this.gains.filter((gain) => gain.outputs.includes(this.destination));
+    const master = this.master();
+    return this.gains.filter((gain) => gain.outputs.includes(this.destination) || (master !== undefined && gain.outputs.includes(master)));
+  }
+  connected(): FakeGain[] {
+    return this.outs().filter((gain) => !gain.disconnected);
   }
   oscillators(): FakeOscillator[] {
     return this.started.filter((node): node is FakeOscillator => node instanceof FakeOscillator);

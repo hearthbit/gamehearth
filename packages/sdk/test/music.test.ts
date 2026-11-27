@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   maxMusicNotes,
+  maxMusicPolyphony,
+  musicPolyphony,
   maxMusicNotesPerSecond,
   musicInstruments,
   musicSeconds,
@@ -127,5 +129,30 @@ describe("Music tracks", () => {
     const largest = { name: "x".repeat(40), bpm: 239.99999999999997, beats: 60, voices: [0, 1, 2, 3].map(() => ({ instrument: "musicbox", volume: value, notes })) };
     expect(trackProblem(largest)).toBeUndefined();
     expect(JSON.stringify(readTrack(largest)).length).toBeLessThan(40 * 1024);
+  });
+});
+
+describe("Review 17: notes sounding at once", () => {
+  const voice = (notes: { at: number; length: number }[]) => ({ instrument: "organ" as const, notes: notes.map((note, index) => ({ freq: 200 + index, ...note })) });
+
+  it("allows at most 24 notes sounding at the same time, counted over all voices", () => {
+    expect(maxMusicPolyphony).toBe(24);
+    const chord = (count: number) => Array.from({ length: count }, () => ({ at: 0, length: 4 }));
+    expect(trackProblem({ bpm: 120, beats: 4, voices: [voice(chord(24))] })).toBeUndefined();
+    expect(trackProblem({ bpm: 120, beats: 4, voices: [voice(chord(25))] })).toMatch(/25 notes sound at the same time \(from beat 0\); at most 24 are allowed/);
+    expect(trackProblem({ bpm: 120, beats: 4, voices: [voice(chord(12)), voice(chord(13))] })).toMatch(/25 notes sound at the same time/);
+  });
+
+  it("counts overlaps, not notes: a note that ends where the next starts does not overlap it", () => {
+    const steps = Array.from({ length: 64 }, (_, index) => ({ at: index / 2, length: 0.5 }));
+    expect(musicPolyphony({ bpm: 120, beats: 32, voices: [voice(steps)] })).toBe(1);
+    const held = [{ at: 0, length: 4 }, { at: 1, length: 2 }, { at: 2, length: 2 }, { at: 3.5, length: 0.5 }];
+    expect(musicPolyphony({ bpm: 120, beats: 4, voices: [voice(held)] })).toBe(3);
+  });
+
+  it("counts across the loop's end, where the last notes meet the first ones", () => {
+    const wrapped = [{ at: 0, length: 1 }, { at: 3, length: 1 }];
+    expect(musicPolyphony({ bpm: 120, beats: 4, voices: [voice(wrapped)] })).toBe(1);
+    expect(musicPolyphony({ bpm: 120, beats: 4, voices: [voice([{ at: 0, length: 4 }, { at: 0, length: 4 }])] })).toBe(2);
   });
 });

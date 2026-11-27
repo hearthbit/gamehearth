@@ -89,6 +89,15 @@ async function fakeAudio(page: Page): Promise<void> {
       createPeriodicWave() {
         return {};
       }
+      createDynamicsCompressor() {
+        return Object.assign(new Node(), {
+          threshold: new Param(this, undefined),
+          knee: new Param(this, undefined),
+          ratio: new Param(this, undefined),
+          attack: new Param(this, undefined),
+          release: new Param(this, undefined),
+        });
+      }
     }
     scope.AudioContext = FakeAudioContext;
   });
@@ -144,11 +153,9 @@ test("music plays with sound and music on, stops with the music switch, crossfad
   await expect(frame.getByTestId("music")).toHaveText("Musik: an");
   await expect.poll(() => notes(page, "sine")).toBeGreaterThan(3);
 
-  const beforeSwitch = await notes(page, "sine");
   await frame.getByTestId("music-b").click();
   await expect.poll(() => notes(page, "sawtooth")).toBeGreaterThan(0);
   const sine = await steady(page, "sine");
-  expect(sine).toBeGreaterThan(beforeSwitch);
   const crossfade = await fades(page);
   expect(crossfade.out).toContain(1);
   expect(crossfade.in).toContain(1.05);

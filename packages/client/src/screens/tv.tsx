@@ -138,7 +138,11 @@ function TvLobby({ room, online }: { room: ScreenView; online: boolean }) {
   return (
     <main class="tv lobby" data-testid="tv-lobby" style={{ "--tone": gameColor(room.game.id) }}>
       <div class="tv-side">
-        <h1 class="tv-title game">{tr(room.game.name, room.game.languages)}</h1>
+        <div class="tv-top">
+          <h1 class="tv-title game">{tr(room.game.name, room.game.languages)}</h1>
+          <SoundSwitch />
+          <MusicSwitch />
+        </div>
         <p class="tv-hint">{texts.tvJoinHint}</p>
         <p class="tv-code" data-testid="tv-room-code">
           {room.code}

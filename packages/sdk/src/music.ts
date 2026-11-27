@@ -31,6 +31,7 @@ export const maxMusicSeconds = 60;
 export const maxMusicVoices = 4;
 export const maxMusicNotes = 256;
 export const maxMusicNotesPerSecond = 64;
+export const maxMusicPolyphony = 24;
 export const maxMusicNameLength = 40;
 export const defaultVoiceVolume = 0.5;
 export const defaultMusicNoteVolume = 1;
@@ -99,7 +100,42 @@ export function trackProblem(track: unknown): string | undefined {
   if (total / seconds > maxMusicNotesPerSecond + slack) {
     return `The track plays ${Math.ceil(total / seconds)} notes per second; at most ${maxMusicNotesPerSecond} are allowed. Use fewer notes or a longer loop.`;
   }
+  const peak = polyphonyPeak({ beats, voices: voices as MusicVoice[] });
+  if (peak.count > maxMusicPolyphony) {
+    return `${peak.count} notes sound at the same time (from beat ${Number(peak.at.toFixed(3))}); at most ${maxMusicPolyphony} are allowed. Shorten or leave out notes there.`;
+  }
   return undefined;
+}
+
+function polyphonyPeak(track: { beats: number; voices: readonly { notes: readonly { at: number; length: number }[] }[] }): { count: number; at: number } {
+  const beats = track.beats;
+  const round = (time: number) => Math.round(time * 1e9) / 1e9;
+  const edges: [number, number][] = [];
+  for (const voice of track.voices) {
+    for (const note of voice.notes) {
+      const start = round(((note.at % beats) + beats) % beats);
+      const end = round(start + note.length);
+      if (end <= beats) {
+        edges.push([start, 1], [end, -1]);
+      } else {
+        edges.push([start, 1], [beats, -1], [0, 1], [round(end - beats), -1]);
+      }
+    }
+  }
+  edges.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  let count = 0;
+  let best = { count: 0, at: 0 };
+  for (const [time, step] of edges) {
+    count += step;
+    if (count > best.count) {
+      best = { count, at: time };
+    }
+  }
+  return best;
+}
+
+export function musicPolyphony(track: MusicTrack): number {
+  return polyphonyPeak(track).count;
 }
 
 function voiceProblem(voice: unknown, beats: number): string | undefined {

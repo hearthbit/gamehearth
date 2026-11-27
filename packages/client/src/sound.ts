@@ -79,9 +79,7 @@ function playTones(tones: readonly Tone[]): void {
   if (audio === undefined) {
     return;
   }
-  if (audio.state === "suspended") {
-    void audio.resume().catch(() => undefined);
-  }
+  resumeAudio();
   const start = audio.currentTime + 0.01;
   for (const tone of tones) {
     const oscillator = audio.createOscillator();
@@ -168,6 +166,11 @@ export function resumeAudio(): void {
 
 export function noteGesture(): void {
   gesture = true;
+}
+
+export function unlockAudio(): void {
+  gesture = true;
+  resumeAudio();
 }
 
 export function toggleSound(on: boolean): void {

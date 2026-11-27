@@ -1,7 +1,7 @@
 import { useDeviceSetting } from "../device-setting";
 import { effects } from "../effects";
 import { music, toggleMusic } from "../music";
-import { sound, toggleSound } from "../sound";
+import { sound, toggleSound, unlockAudio } from "../sound";
 import { texts } from "../texts";
 import { EffectsIcon, MusicIcon, SoundIcon } from "./icons";
 import type { MenuItem } from "./menu";
@@ -9,7 +9,17 @@ import type { MenuItem } from "./menu";
 export function SoundSwitch() {
   const [on] = useDeviceSetting(sound);
   return (
-    <button type="button" class="icon-button toggle" aria-pressed={on} aria-label={texts.sound} title={on ? texts.soundOn : texts.soundOff} onClick={() => toggleSound(!on)}>
+    <button
+      type="button"
+      class="icon-button toggle"
+      aria-pressed={on}
+      aria-label={texts.sound}
+      title={on ? texts.soundOn : texts.soundOff}
+      onClick={() => {
+        unlockAudio();
+        toggleSound(!on);
+      }}
+    >
       <SoundIcon on={on} />
     </button>
   );
@@ -23,7 +33,17 @@ export function useSoundItem(): MenuItem {
 export function MusicSwitch() {
   const [on] = useDeviceSetting(music);
   return (
-    <button type="button" class="icon-button toggle" aria-pressed={on} aria-label={texts.music} title={on ? texts.musicOn : texts.musicOff} onClick={() => toggleMusic(!on)}>
+    <button
+      type="button"
+      class="icon-button toggle"
+      aria-pressed={on}
+      aria-label={texts.music}
+      title={on ? texts.musicOn : texts.musicOff}
+      onClick={() => {
+        unlockAudio();
+        toggleMusic(!on);
+      }}
+    >
       <MusicIcon on={on} />
     </button>
   );
