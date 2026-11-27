@@ -8,7 +8,7 @@ Games are open source and built so that non-programmers can also develop them wi
 
 ## What it does
 
-Turn-based card games with hidden hands, realtime party games with a TV and phones as controllers, single-player games that work offline, and draw-and-guess with free text input. Accounts exist by invite, guests join via link or QR code, notifications say when it is your turn. Games can declare options and house rules, keep profiles with items and stats per player, offer bots for empty seats and play sounds through the platform. The UI ("Neon hall", with two more themes) is in German and English.
+Turn-based card games with hidden hands, realtime party games with a TV and phones as controllers, single-player games that work offline, and draw-and-guess with free text input. Accounts exist by invite, guests join via link or QR code, notifications say when it is your turn. Games can declare options and house rules, keep profiles with items and stats per player, offer bots for empty seats and play sounds and music through the platform. The UI ("Neon hall", with two more themes) is in German and English.
 
 - The SDK core is in [packages/sdk](packages/sdk) (`@gamehearth/sdk`), with docs on the game contract and the client SDK (`@gamehearth/sdk/client`) in [packages/sdk/README.md](packages/sdk/README.md).
 - Mau-Mau is the first game, with a UI in Phaser 4. It lives in its own repo [hearthbit/gamehearth-mau-mau](https://github.com/hearthbit/gamehearth-mau-mau) and is in the [Gamehearth catalog](https://github.com/hearthbit/gamehearth-catalog), like the other games. Here, under [fixtures/mau-mau](fixtures/mau-mau), is only a frozen copy for the tests.
