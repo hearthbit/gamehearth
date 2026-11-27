@@ -98,4 +98,36 @@ export {
   soundWaves,
 } from "./sound";
 export type { Note, Sound, SoundName, SoundNotes, SoundWave } from "./sound";
+export {
+  defaultMusicNoteVolume,
+  defaultVoiceVolume,
+  maxMusicBeats,
+  maxMusicBpm,
+  maxMusicNameLength,
+  maxMusicNotes,
+  maxMusicNotesPerSecond,
+  maxMusicSeconds,
+  maxMusicVoices,
+  minMusicBpm,
+  musicInstruments,
+  musicSeconds,
+  readTrack,
+  trackLabel,
+  trackProblem,
+} from "./music";
+export type { MusicInstrument, MusicNote, MusicTrack, MusicVoice } from "./music";
+export { createMusicPlayer, musicCrossfadeSeconds, musicLookaheadSeconds, musicPeakGain, musicTickMs } from "./music-player";
+export type {
+  AudioBufferLike,
+  AudioBufferSourceNodeLike,
+  AudioContextLike,
+  AudioNodeLike,
+  AudioParamLike,
+  BiquadFilterNodeLike,
+  GainNodeLike,
+  MusicPlayer,
+  MusicPlayerOptions,
+  MusicTimers,
+  OscillatorNodeLike,
+} from "./music-player";
 export { applyJsonDelta, jsonDelta, type JsonDelta, type JsonDeltaOp, type JsonDeltaResult, type JsonPath } from "./delta";

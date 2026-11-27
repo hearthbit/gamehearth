@@ -486,6 +486,7 @@ if (!result.ok) {
 | `game.onUpdate(f)` | calls `f` right away with the current update and then on every change; returns a function to unsubscribe |
 | `game.move(action)` | sends a move; the answer is `{ ok: true }` or `{ ok: false, code, message }` and arrives after at most 15 seconds (otherwise `timeout`) |
 | `game.sound(sound)`, `game.soundOn`, `game.onSound(f)` | plays a sound through the platform, see "Sound" |
+| `game.music(track)`, `game.musicOn`, `game.onMusic(f)` | plays a looping track through the platform, see "Music" |
 
 - The new update after a move comes through `onUpdate`, not as the answer of `move`. When `move` answers `{ ok: true }`, it has already arrived; `game.current` then shows the update after the move.
 - `move` sends along the `version` of the most recently received update. If the match has changed in the meantime, the answer is `stale`, and the new update is already on its way. A game doesn't need to react to this.
@@ -511,6 +512,46 @@ game.sound({ notes: [{ freq: 440, length: 0.08 }, { freq: 660, at: 0.08, length:
 - **With a TV:** shared sounds (start, end, a point for someone) come from the TV, personal ones (your turn, your card) from the phone. The TV has its own switch; turning it on also unlocks its sound.
 - The platform plays at most 12 sounds per second per game frame and drops the rest. Use sounds for events, not for every tick.
 - `connectSolo` offers the same `sound`, `soundOn` and `onSound`.
+
+### Music
+
+From SDK 0.1.9 a game can also play music through the platform: a loop described with notes, synthesized like the sounds, without audio files and without anything to preload for offline play.
+
+```ts
+import type { MusicTrack } from "@gamehearth/sdk/client";
+
+const forest: MusicTrack = {
+  name: "Forest",
+  bpm: 100,
+  beats: 8,
+  voices: [
+    { instrument: "musicbox", notes: [{ freq: 784, at: 0, length: 1 }, { freq: 659, at: 1, length: 1 }, { freq: 523, at: 2, length: 2 }, { freq: 587, at: 4, length: 4 }] },
+    { instrument: "bass", volume: 0.3, notes: [{ freq: 131, at: 0, length: 4 }, { freq: 98, at: 4, length: 4 }] },
+  ],
+};
+
+game.music(forest); // when the scene starts
+game.music(null); // stops it
+```
+
+| Field | Meaning |
+|---|---|
+| `name` | optional, 1 to 40 characters; `dev` shows it in its header |
+| `bpm` | tempo in beats per minute, 40 to 240 |
+| `beats` | length of the loop in beats, a whole number from 1 to 128; the loop lasts at most 60 seconds (`beats × 60 / bpm`) |
+| `voices` | 1 to 4 voices, each `{ instrument, volume?, notes }` |
+| `instrument` | the plain waves `square`, `sine`, `triangle`, `sawtooth` or the presets `musicbox`, `organ`, `pluck`, `bass` and `noise` (filtered noise for wind or crackle; `freq` sets the filter, `to` slides it); the list is `musicInstruments` |
+| `volume` | of the voice, 0 to 1, default 0.5 |
+| `notes` | 1 to 256 notes `{ freq, at, length, volume?, to? }`: `freq` in hertz (30 to 8,000), `at` the beat the note starts on (at least 0 and before `beats`, fractions allowed), `length` in beats (more than 0; the note ends by the end of the loop), `volume` 0 to 1 (default 1), `to` slides to this pitch |
+
+- At most 256 notes in all voices together and at most 64 notes per second of loop, so that a short loop cannot flood a phone's audio. A track is a few kilobytes as a message and never more than about 40 KB.
+- The platform repeats the loop seamlessly on the audio clock until the game calls `game.music` with another track or `null`. Another track crossfades in about a second; the same track again (also a copy with the same content) keeps playing; `null` fades out. While the page is hidden, the music pauses and goes on where it was. When the game is loaded again (a new round, a reload) the music stops, and the new game starts its own.
+- **Two switches.** Music plays only when the device's sound switch and its music switch are both on. Sound is off by default and music on, so turning on sound brings the music along, and players can turn the music off on its own. The platform mixes music quieter than sounds: a note peaks at `0.05 × voice volume × note volume`, a sound at `0.12 × volume`. On iPhones the ringer switch applies as for sounds.
+- `game.music(track)` returns whether the track plays now: `false` when a switch is off or nothing plays (`null`), and for an invalid track, which it also reports on the console and does not send. The platform keeps the last valid track and starts it as soon as both switches are on, so a game calls `game.music` when its scene changes, not when the switches change. `game.musicOn` says whether music plays, `game.onMusic(f)` reports changes (for example to show a note symbol).
+- **One loop per scene,** set when the scene changes, never every frame. Music is mood: nothing important may only be heard in it.
+- **With a TV,** shared music comes from the TV: call `game.music` on the TV and leave the phones quiet, otherwise every phone plays along. The TV has its own switches.
+- A game that uses music needs SDK 0.1.9 as a package; its manifest's `"sdk"` range may stay as it is. On an older platform the track is ignored and `game.musicOn` stays `false`.
+- `connectSolo` offers the same `music`, `musicOn` and `onMusic`. `trackProblem(track)` from `@gamehearth/sdk/platform` checks a track in tests and returns `undefined` or the problem.
 
 ### Roles: player, controller and TV
 
@@ -623,7 +664,7 @@ At most 10 best scores per game, each with `better`. Best scores are profile sta
 
 **What the platform does for this.** It saves to the device right away and syncs with the server as soon as it is reachable: for best scores the better one wins, for the save the newer one. Offline it loads the game from the browser cache. The game doesn't need to know about any of this; in particular it needs neither `localStorage` nor `indexedDB` (neither exists in the sealed-off iframe).
 
-**Protocol.** Underneath `connect` is `postMessage` with messages of the form `{ gamehearth: 1, type, … }`. The game sends `ready` and `move` (`id`, `action`, `expectedVersion`), the platform sends `update` (`seat`, `role`, `snapshot`, `players`, `options`, `online`, for seats `profile`, optionally `tickMs` when a tick currently doesn't last 50 ms, optionally `language`) and `result` (`id`, `ok`, on errors `code` and `message`). `role` is `player`, `controller` or `screen`; a TV has `seat: null`. Realtime snapshots carry `snapshot.tick`. Underneath `connectSolo` the game sends `solo-ready`, `save` (`id`, `data`) and `record` (`id`, `stat`, `value`), the platform sends `solo` (`saved`, `best`, optionally `language`; `saved: null` means no save) and `result`. If a game does not match the page that opened it (`connect` on the single-player page, `connectSolo` in a room), the platform answers with `refused` (`message`). Both sides discard messages from other windows and in a foreign shape. For the platform, `parseGameMessage` from `@gamehearth/sdk/platform` checks the shape, size and JSON rules of every move and save like the server does.
+**Protocol.** Underneath `connect` is `postMessage` with messages of the form `{ gamehearth: 1, type, … }`. The game sends `ready` and `move` (`id`, `action`, `expectedVersion`), the platform sends `update` (`seat`, `role`, `snapshot`, `players`, `options`, `online`, for seats `profile`, optionally `tickMs` when a tick currently doesn't last 50 ms, optionally `language`) and `result` (`id`, `ok`, on errors `code` and `message`). `role` is `player`, `controller` or `screen`; a TV has `seat: null`. Realtime snapshots carry `snapshot.tick`. Underneath `connectSolo` the game sends `solo-ready`, `save` (`id`, `data`) and `record` (`id`, `stat`, `value`), the platform sends `solo` (`saved`, `best`, optionally `language`; `saved: null` means no save) and `result`. Sounds and music travel from the game as `sound` (`sound`) and `music` (`track`, a track or `null`), the switches from the platform as `settings` (`sound`, `music`; `music` is `true` only while both switches are on, and an older platform leaves it out). If a game does not match the page that opened it (`connect` on the single-player page, `connectSolo` in a room), the platform answers with `refused` (`message`). Both sides discard messages from other windows and in a foreign shape. For the platform, `parseGameMessage` from `@gamehearth/sdk/platform` checks the shape, size and JSON rules of every move, save, sound and track like the server does.
 
 ## Languages
 
@@ -671,6 +712,8 @@ These functions are used by the server, the dev tool and tests, not by the games
 | `stepMatch(game, match, { inputs, now, dt, away?, bots? }, { catalog?, profiles? })` | one realtime step: the inputs `{ player, action }` in order, then one move from `bot` for every seat in `bots` (in that order, against the state after the inputs), then `tick`; `away` lists the away seats for `ctx.away`. Returns `{ ok: true, match, results, changes?, bots? }` or `{ ok: false, error }`. `results` has one result per input in the same order, each `{ ok: true }` or `{ ok: false, code, message }`, so without the `error` field as in `applyMove`; `changes` contains only changes from successful inputs, bot moves and the tick; `bots` lists `{ player, message }` for bots whose choice was replaced or refused |
 | `botMove(game, match, player, { now, away?, catalog?, profiles? })` | asks `bot` for a move of this seat: `{ ok: true, action?, chosen, problem? }` with `chosen` `"bot"`, `"random"` (no `bot`, `undefined`, or a problem in turn-based) or `"none"` (no move); `problem` says why the bot's choice was replaced. The caller still plays the move with `applyMove`. `hasBot(game)` says whether a game has `bot` |
 | `soundProblem`, `readSound`, `soundNotes`, `soundNames` | check a sound from a game, normalize it and turn a named sound into notes; the platform client and `dev` play them |
+| `trackProblem`, `readTrack`, `musicSeconds`, `trackLabel`, `musicInstruments` | check a music track from a game (`undefined` or the problem), normalize it with the default volumes, its loop length in seconds and its name for display (`"music"` without one); the limits are `minMusicBpm`, `maxMusicBpm`, `maxMusicBeats`, `maxMusicSeconds`, `maxMusicVoices`, `maxMusicNotes` and `maxMusicNotesPerSecond` |
+| `createMusicPlayer({ context, gain?, timers? })` | the music player of the platform client and `dev`: a lookahead scheduler that loops a track on the audio clock. `play(track \| null)` starts, crossfades (1 second), keeps a deep-equal track and fades out with `null`; `setPaused(true)` pauses where it is (for a hidden page) and `setPaused(false)` goes on there; `track` is the current track, `stop()` ends everything at once. `context` returns a Web Audio context (typed structurally as `AudioContextLike`, so the SDK needs no DOM types) and is only called once something plays; `gain` is the peak of a note at full volume (`musicPeakGain`, 0.05) |
 | `refreshMatch(game, match, { catalog?, profiles? })` | recomputes the legal moves of a turn-based match with new profiles; the state stays, `version` goes up by 1; returns `{ ok: true, match }` or `{ ok: false, error }` like `createMatch` |
 | `applyChange(profile, change, catalog)` | applies a profile change `{ op, id, value }` like the runner; returns `undefined` or `{ kind: "missing" \| "invalid", message }` |
 | `validateCatalogSpec`, `catalogIds`, `profileProblem`, `changeProblem`, `readProfile`, `emptyProfile` | check and read catalog and profiles, the same rules in SDK, dev tool and server |
@@ -721,7 +764,7 @@ A `playerSnapshot` contains `player`, `players`, `public`, `me` (the seat's own 
 - Prediction with rollback in realtime; smoothing deliberately shows the world about 100 ms behind the server.
 - A tick rate per game; all realtime games run at 20 ticks per second.
 - Time limits per move.
-- Sound files and a volume control; sounds are synthesized from notes.
+- Sound files and a volume control; sounds and music are synthesized from notes.
 - Placeholders for decimals, for lists of varying length and for patterns; free inputs go through `text()` and `int()` (see "Free inputs: placeholders").
 - Checking the JSON rules while typing (at the type level). So far only the runtime detects violations, but with a precise message.
 - Items, counters and flags for single-player games without a reducer; they have a save and best scores.

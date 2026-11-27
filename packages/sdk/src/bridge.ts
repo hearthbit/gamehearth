@@ -4,6 +4,7 @@ import { maxActionDepth, maxActionLength } from "./match";
 import { optionsProblem, type GameOptions } from "./options";
 import { maxProfileValue, profileIdPattern, profileProblem, readProfile, type ProfileData } from "./profile";
 import { readSound, type Sound } from "./sound";
+import { readTrack, type MusicTrack } from "./music";
 import type { PlayerId } from "./state";
 
 export const bridgeVersion = 1;
@@ -50,13 +51,14 @@ export type GameMessage =
   | { gamehearth: typeof bridgeVersion; type: "solo-ready" }
   | { gamehearth: typeof bridgeVersion; type: "save"; id: number; data: unknown; problem?: string }
   | { gamehearth: typeof bridgeVersion; type: "record"; id: number; stat: string; value: number; problem?: string }
-  | { gamehearth: typeof bridgeVersion; type: "sound"; sound: Sound };
+  | { gamehearth: typeof bridgeVersion; type: "sound"; sound: Sound }
+  | { gamehearth: typeof bridgeVersion; type: "music"; track: MusicTrack | null };
 
 export type PlatformMessage<Snapshot = unknown> =
   | ({ gamehearth: typeof bridgeVersion; type: "update" } & BridgeUpdate<Snapshot>)
   | ({ gamehearth: typeof bridgeVersion; type: "result"; id: number } & MoveResult)
   | ({ gamehearth: typeof bridgeVersion; type: "solo" } & SoloState)
-  | { gamehearth: typeof bridgeVersion; type: "settings"; sound: boolean }
+  | { gamehearth: typeof bridgeVersion; type: "settings"; sound: boolean; music?: boolean }
   | { gamehearth: typeof bridgeVersion; type: "refused"; message: string };
 
 export function saveProblem(data: unknown): string | undefined {
@@ -118,6 +120,13 @@ export function parseGameMessage(data: unknown): GameMessage | undefined {
     const sound = readSound(data["sound"]);
     return sound === undefined ? undefined : { gamehearth: bridgeVersion, type: "sound", sound };
   }
+  if (data["type"] === "music" && "track" in data) {
+    if (data["track"] === null) {
+      return { gamehearth: bridgeVersion, type: "music", track: null };
+    }
+    const track = readTrack(data["track"]);
+    return track === undefined ? undefined : { gamehearth: bridgeVersion, type: "music", track };
+  }
   if (data["type"] === "save" && isCounter(data["id"])) {
     const problem = saveProblem(data["data"]);
     return problem === undefined
@@ -167,7 +176,12 @@ export function parsePlatformMessage(data: unknown): PlatformMessage | undefined
       : undefined;
   }
   if (data["type"] === "settings") {
-    return typeof data["sound"] === "boolean" ? { gamehearth: bridgeVersion, type: "settings", sound: data["sound"] } : undefined;
+    if (typeof data["sound"] !== "boolean") {
+      return undefined;
+    }
+    return typeof data["music"] === "boolean"
+      ? { gamehearth: bridgeVersion, type: "settings", sound: data["sound"], music: data["music"] }
+      : { gamehearth: bridgeVersion, type: "settings", sound: data["sound"] };
   }
   if (data["type"] === "refused") {
     return typeof data["message"] === "string" ? { gamehearth: bridgeVersion, type: "refused", message: data["message"].slice(0, 500) } : undefined;

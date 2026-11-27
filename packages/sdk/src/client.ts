@@ -6,6 +6,8 @@ import type { GameOptions, OptionsShape } from "./options";
 import { emptyProfile, type AnyCatalog, type CatalogIds, type Profile, type ProfileData } from "./profile";
 import { isLanguage, primaryLanguage } from "./i18n";
 import { soundProblem, type Sound } from "./sound";
+import { canonicalJson } from "./json";
+import { trackProblem, type MusicTrack } from "./music";
 
 export type { MoveResult, PlayerInfo, Role } from "./bridge";
 export { connectSolo } from "./solo";
@@ -22,6 +24,7 @@ export type { GameState, PlayerId } from "./state";
 export type { PlayerSnapshot, ScreenSnapshot } from "./snapshot";
 export { soundNames } from "./sound";
 export type { Note, Sound, SoundName, SoundNotes, SoundWave } from "./sound";
+export type { MusicInstrument, MusicNote, MusicTrack, MusicVoice } from "./music";
 
 export interface SoundControl {
   readonly soundOn: boolean;
@@ -29,25 +32,73 @@ export interface SoundControl {
   onSound(listener: (on: boolean) => void): () => void;
 }
 
+export interface MusicControl {
+  readonly musicOn: boolean;
+  music(track: MusicTrack | null): boolean;
+  onMusic(listener: (on: boolean) => void): () => void;
+}
+
 interface SoundState {
   on: boolean;
   listeners: Set<(on: boolean) => void>;
+  musicOn: boolean;
+  musicListeners: Set<(on: boolean) => void>;
+  sentTrack: string | undefined;
 }
 
-export function soundChannel(post: (message: unknown) => void): { state: SoundState; control: SoundControl; receive(on: boolean): void } {
-  const state: SoundState = { on: false, listeners: new Set() };
+function notify(listeners: Set<(on: boolean) => void>, on: boolean): void {
+  for (const listener of [...listeners]) {
+    listener(on);
+  }
+}
+
+export function soundChannel(post: (message: unknown) => void): { state: SoundState; control: SoundControl & MusicControl; receive(on: boolean, music?: boolean): void } {
+  const state: SoundState = { on: false, listeners: new Set(), musicOn: false, musicListeners: new Set(), sentTrack: undefined };
   return {
     state,
-    receive(on) {
-      if (state.on === on) {
-        return;
-      }
+    receive(on, music = false) {
+      const musicOn = on && music;
+      const soundChanged = state.on !== on;
+      const musicChanged = state.musicOn !== musicOn;
       state.on = on;
-      for (const listener of [...state.listeners]) {
-        listener(on);
+      state.musicOn = musicOn;
+      if (soundChanged) {
+        notify(state.listeners, on);
+      }
+      if (musicChanged) {
+        notify(state.musicListeners, musicOn);
       }
     },
     control: {
+      get musicOn() {
+        return state.musicOn;
+      },
+      music(track) {
+        let text = "null";
+        if (track !== null) {
+          const problem = trackProblem(track);
+          if (problem !== undefined) {
+            (globalThis as { console?: { error(message: string): void } }).console?.error(`game.music: ${problem}`);
+            return false;
+          }
+          text = canonicalJson(track);
+        }
+        if (text !== state.sentTrack) {
+          try {
+            post({ gamehearth: bridgeVersion, type: "music", track: JSON.parse(text) as unknown });
+          } catch {
+            return false;
+          }
+          state.sentTrack = text;
+        }
+        return track !== null && state.musicOn;
+      },
+      onMusic(listener) {
+        state.musicListeners.add(listener);
+        return () => {
+          state.musicListeners.delete(listener);
+        };
+      },
       get soundOn() {
         return state.on;
       },
@@ -94,7 +145,7 @@ export interface ScreenUpdate<S extends AnyGameState, O extends OptionsShape<O> 
   tickMs?: number;
 }
 
-export interface GameConnection<S extends AnyGameState, A, O extends OptionsShape<O> = GameOptions, C extends CatalogIds = AnyCatalog> extends SoundControl {
+export interface GameConnection<S extends AnyGameState, A, O extends OptionsShape<O> = GameOptions, C extends CatalogIds = AnyCatalog> extends SoundControl, MusicControl {
   readonly role: "player" | "controller";
   readonly seat: PlayerId;
   readonly language: string;
@@ -103,7 +154,7 @@ export interface GameConnection<S extends AnyGameState, A, O extends OptionsShap
   move(action: A): Promise<MoveResult>;
 }
 
-export interface ScreenConnection<S extends AnyGameState, O extends OptionsShape<O> = GameOptions> extends SoundControl {
+export interface ScreenConnection<S extends AnyGameState, O extends OptionsShape<O> = GameOptions> extends SoundControl, MusicControl {
   readonly role: "screen";
   readonly language: string;
   readonly current: ScreenUpdate<S, O>;
@@ -185,7 +236,7 @@ export function connect<S extends AnyGameState, A, O extends OptionsShape<O> = G
         return;
       }
       if (message.type === "settings") {
-        sounds.receive(message.sound);
+        sounds.receive(message.sound, message.music);
         return;
       }
       if (message.type === "refused") {
@@ -253,6 +304,11 @@ export function connect<S extends AnyGameState, A, O extends OptionsShape<O> = G
         },
         sound: sounds.control.sound,
         onSound: sounds.control.onSound,
+        get musicOn() {
+          return sounds.control.musicOn;
+        },
+        music: sounds.control.music,
+        onMusic: sounds.control.onMusic,
         get current() {
           return state.current as ScreenUpdate<S, O>;
         },
@@ -276,6 +332,11 @@ export function connect<S extends AnyGameState, A, O extends OptionsShape<O> = G
         },
         sound: sounds.control.sound,
         onSound: sounds.control.onSound,
+        get musicOn() {
+          return sounds.control.musicOn;
+        },
+        music: sounds.control.music,
+        onMusic: sounds.control.onMusic,
         get current() {
           return state.current as GameUpdate<S, A, O, C>;
         },

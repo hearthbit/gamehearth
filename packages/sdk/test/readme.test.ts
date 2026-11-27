@@ -3,7 +3,7 @@ import readme from "../README.md?raw";
 import fixture from "./fixtures/readme-example.ts?raw";
 import example from "./fixtures/readme-example";
 import * as gameApi from "../src/index";
-import { applyMove, createMatch, playerSnapshot } from "../src/platform";
+import { applyMove, createMatch, playerSnapshot, trackProblem } from "../src/platform";
 import { expectMatch } from "./helpers";
 
 function normalize(text: string): string {
@@ -24,6 +24,13 @@ describe("README", () => {
     }
     expect(match.result?.winners.length).toBeGreaterThan(0);
     expect(playerSnapshot(match, "p1").public.revealed).toHaveProperty("p3");
+  });
+
+  it("shows a valid music track", () => {
+    const literal = /const forest: MusicTrack = (\{[\s\S]*?\n\});/.exec(normalize(readme))?.[1];
+    expect(literal).toBeDefined();
+    const track = new Function(`return ${literal ?? "undefined"};`)() as unknown;
+    expect(trackProblem(track)).toBeUndefined();
   });
 
   it("gives games only defineGame, the placeholders and types, no platform tools", () => {

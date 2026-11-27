@@ -1,7 +1,7 @@
 import { bridgeVersion, parsePlatformMessage, recordProblem, saveProblem } from "./bridge";
-import { browserLanguage, soundChannel, type ConnectOptions, type MessageEventLike, type SoundControl } from "./client";
+import { browserLanguage, soundChannel, type ConnectOptions, type MessageEventLike, type MusicControl, type SoundControl } from "./client";
 
-export interface SoloGame<Save, Stat extends string = string> extends SoundControl {
+export interface SoloGame<Save, Stat extends string = string> extends SoundControl, MusicControl {
   readonly language: string;
   readonly saved: Save | undefined;
   readonly best: Readonly<Partial<Record<Stat, number>>>;
@@ -57,7 +57,7 @@ export function connectSolo<Save = unknown, Stat extends string = string>(option
         return;
       }
       if (message.type === "settings") {
-        sounds.receive(message.sound);
+        sounds.receive(message.sound, message.music);
         return;
       }
       if (message.type === "refused") {
@@ -133,6 +133,11 @@ export function connectSolo<Save = unknown, Stat extends string = string>(option
         },
         sound: sounds.control.sound,
         onSound: sounds.control.onSound,
+        get musicOn() {
+          return sounds.control.musicOn;
+        },
+        music: sounds.control.music,
+        onMusic: sounds.control.onMusic,
         get saved() {
           return current.saved === undefined ? undefined : (JSON.parse(current.saved) as Save);
         },
