@@ -177,6 +177,16 @@ The platform plays the sounds; the UI only names them: `game.sound("coin")` with
 - Sound is off by default; players turn it on in the menu of the game page, the TV has its own switch, and on an iPhone the ringer switch must be on too. So nothing important may only be heard. `game.soundOn` says whether it is on.
 - In `npm run dev` the "Sound" switch at the top turns it on for the TV and all phones (also off by default); the header names the last sound played and its frame, so you can check it without speakers.
 
+## Music
+
+The platform also plays music: a loop the game describes with notes. `game.music(track)` starts it, `game.music(null)` stops it; again no audio files and no Phaser audio. Tag has no music; add some only if the person wants it.
+
+- **Shared music comes from the TV.** Call `game.music` only in the TV's code (`client/src/screen.ts`), so that the phones do not all play along; the TV has its own switches.
+- **One loop per scene,** for example one for the round and none between rounds. Call `game.music` when the scene changes, never on every tick: the same track again keeps playing, another one crossfades in about a second.
+- A track has `bpm` (40 to 240), `beats` (the length of the loop, a whole number from 1 to 128; at most 60 seconds), an optional `name` (`dev` shows it) and 1 to 4 `voices`, each with an `instrument` (`square`, `sine`, `triangle`, `sawtooth`, `musicbox`, `organ`, `pluck`, `bass`, `noise`), an optional `volume` and its `notes`: `freq` in hertz, `at` and `length` in beats, optionally `volume` and `to` (slides to this pitch). At most 256 notes in all and 64 per second (SDK README, "Music"). Keep tracks as constants in `client/src/view.ts` and give each a test with `trackProblem` from `@gamehearth/sdk/platform`; an invalid track plays nothing and only shows up on the console.
+- **Off by default.** Music plays only when sound and the music switch are both on; sound is off by default, music on, and players can turn music off on its own. The platform remembers the last track and starts it once both are on, so the game does not need to react to the switches. `game.musicOn` and `game.onMusic` say whether music plays. Music is mood: nothing important may only be heard in it.
+- In `npm run dev` music plays only with "Sound" and "Music" both switched on at the top (both off by default), and only one frame's: the TV's, otherwise the first seat's that has a track. The header names the playing track.
+
 ## Languages
 
 The example speaks English and German; the German is only an example of a translation. Replace it with the languages of your game (see "Who you work with").

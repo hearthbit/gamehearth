@@ -1,7 +1,28 @@
+import { musicSeconds, trackProblem } from "@gamehearth/sdk/platform";
 import { describe, expect, it } from "vitest";
 import manifest from "../manifest.json";
 import { texts } from "../client/src/texts";
-import { cell, directionOfKey, finishLine, finishSound, formatTime, frameMs, hudLine, menuEntries, padDirection, pressKey, recordLine, releaseKey, sharpness, speed, steerTowardLane, topKey, velocity } from "../client/src/view";
+import {
+  cell,
+  directionOfKey,
+  finishLine,
+  finishSound,
+  formatTime,
+  frameMs,
+  hudLine,
+  levelMusic,
+  menuEntries,
+  padDirection,
+  pressKey,
+  recordLine,
+  releaseKey,
+  sceneMusic,
+  sharpness,
+  speed,
+  steerTowardLane,
+  topKey,
+  velocity,
+} from "../client/src/view";
 
 const en = texts("en");
 const de = texts("de");
@@ -49,6 +70,15 @@ describe("Sound", () => {
     expect(finishSound(undefined)).toBe("coin");
     expect(finishSound({ totalMs: 61_000, ranked: true })).toBe("win");
     expect(finishSound({ totalMs: 20_000, ranked: false })).toBe("win");
+  });
+});
+
+describe("Music", () => {
+  it("plays a valid music-box loop in a level and nothing in the menu", () => {
+    expect(trackProblem(levelMusic)).toBeUndefined();
+    expect(musicSeconds(levelMusic)).toBeCloseTo(4.8);
+    expect(sceneMusic("level")).toBe(levelMusic);
+    expect(sceneMusic("menu")).toBeNull();
   });
 });
 

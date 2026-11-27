@@ -4,7 +4,7 @@ import { finishLevel, readSave, startRun, withLevelTime, type Save } from "../..
 import { mountControls } from "./controls";
 import { fieldHeight, fieldWidth, LevelScene } from "./scene";
 import { texts } from "./texts";
-import { finishLine, finishSound, menuEntries, recordLine, sharpness, type MenuEntry } from "./view";
+import { finishLine, finishSound, menuEntries, recordLine, sceneMusic, sharpness, type MenuEntry } from "./view";
 
 function byId(id: string): HTMLElement {
   const node = document.getElementById(id);
@@ -42,6 +42,7 @@ async function start(): Promise<void> {
     const entries = byId("entries");
 
     const showMenu = (message: string) => {
+      game.music(sceneMusic("menu"));
       byId("record").textContent = recordLine(t, game.best["best-time"]);
       byId("message").textContent = message;
       entries.replaceChildren(
@@ -105,6 +106,7 @@ async function start(): Promise<void> {
       }
       menu.hidden = true;
       game.sound("start");
+      game.music(sceneMusic("level"));
       controls.reset();
       const run = save.run;
       if (run !== null) {

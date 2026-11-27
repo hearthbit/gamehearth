@@ -117,7 +117,9 @@ body.single #solo-box { display: none; }
   <span class="spacer"></span>
   <span id="status">connecting …</span>
   <span id="sound-note" class="tag" aria-live="polite"></span>
+  <span id="music-note" class="tag" aria-live="polite"></span>
   <label id="sound-box" title="Plays the sounds of the game (game.sound) like the platform: off by default, and on iPhones only with the ringer on"><input type="checkbox" id="sound"> Sound</label>
+  <label id="music-box" title="Plays the music of the game (game.music) like the platform, only together with Sound: the TV's track, otherwise the first seat's. Off by default here; on the platform it is on by default"><input type="checkbox" id="music"> Music</label>
   <button id="pause" type="button" class="multi" hidden>Pause</button>
   <button id="step" type="button" class="multi" hidden>One tick</button>
   <select id="speed" class="multi" aria-label="Speed" hidden><option value="1">normal</option><option value="0.5">half speed</option><option value="0.25">quarter speed</option></select>

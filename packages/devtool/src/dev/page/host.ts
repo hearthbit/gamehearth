@@ -1,9 +1,11 @@
-import { bridgeVersion, localize, parseGameMessage, type Localized, type MoveResult, type Sound } from "@gamehearth/sdk/platform";
+import { bridgeVersion, createMusicPlayer, localize, parseGameMessage, type Localized, type MoveResult, type MusicTrack, type Sound } from "@gamehearth/sdk/platform";
 import {
   admitSound,
   formatProblem,
   frameSnapshot,
   frameUpdate,
+  musicLabel,
+  musicSource,
   screenSeat,
   settingsMessage,
   soloMessage,
@@ -25,6 +27,7 @@ interface Frame {
   botState: HTMLElement | undefined;
   away?: HTMLInputElement;
   sounds: number[];
+  track: MusicTrack | null;
   details: HTMLDetailsElement;
   snapshot: HTMLElement;
   ready: boolean;
@@ -39,20 +42,23 @@ const frames = new Map<string, Frame>();
 let view: DevView | undefined;
 let layoutKey = "";
 const soundKey = "gamehearth-dev.sound";
-let soundOn = readSoundSetting();
+const musicKey = "gamehearth-dev.music";
+let soundOn = readSetting(soundKey);
+let musicOn = readSetting(musicKey);
 let audio: AudioContext | undefined;
+const player = createMusicPlayer({ context: () => audioContext() });
 
-function readSoundSetting(): boolean {
+function readSetting(key: string): boolean {
   try {
-    return localStorage.getItem(soundKey) === "on";
+    return localStorage.getItem(key) === "on";
   } catch {
     return false;
   }
 }
 
-function storeSoundSetting(on: boolean): void {
+function storeSetting(key: string, on: boolean): void {
   try {
-    localStorage.setItem(soundKey, on ? "on" : "off");
+    localStorage.setItem(key, on ? "on" : "off");
   } catch {
     return;
   }
@@ -109,20 +115,43 @@ function playSound(frame: Frame, sound: Sound): void {
   }
 }
 
-function sendSettings(frame: Frame): void {
-  frame.iframe?.contentWindow?.postMessage(settingsMessage(soundOn), "*");
+function refreshMusic(): void {
+  const track = soundOn && musicOn ? (musicSource(frames.values())?.track ?? null) : null;
+  const hidden = document.visibilityState === "hidden";
+  if (track !== null && !hidden) {
+    unlockSound();
+  }
+  player.setPaused(hidden);
+  player.play(track);
+  byId("music-note").textContent = musicLabel(hidden ? null : track);
 }
 
-function setSound(on: boolean): void {
-  soundOn = on;
-  storeSoundSetting(on);
-  unlockSound();
-  byId("sound-note").textContent = "";
+function sendSettings(frame: Frame): void {
+  frame.iframe?.contentWindow?.postMessage(settingsMessage(soundOn, musicOn), "*");
+}
+
+function sendAllSettings(): void {
   for (const frame of frames.values()) {
     if (frame.ready) {
       sendSettings(frame);
     }
   }
+  refreshMusic();
+}
+
+function setSound(on: boolean): void {
+  soundOn = on;
+  storeSetting(soundKey, on);
+  unlockSound();
+  byId("sound-note").textContent = "";
+  sendAllSettings();
+}
+
+function setMusic(on: boolean): void {
+  musicOn = on;
+  storeSetting(musicKey, on);
+  unlockSound();
+  sendAllSettings();
 }
 
 function element<K extends keyof HTMLElementTagNameMap>(tag: K, props: Partial<HTMLElementTagNameMap[K]> = {}, ...children: (Node | string)[]): HTMLElementTagNameMap[K] {
@@ -180,6 +209,8 @@ function loadFrame(frame: Frame): void {
   frame.ready = false;
   frame.sent = undefined;
   frame.sounds = [];
+  frame.track = null;
+  refreshMusic();
   frame.iframe?.remove();
   frame.iframe = undefined;
   frame.holder.replaceChildren();
@@ -211,7 +242,7 @@ function buildScreenFrame(root: HTMLElement): void {
   details.addEventListener("toggle", refreshInsight);
   const article = element("article", { className: "seat tv" }, bar, holder, details);
   root.append(article);
-  const frame: Frame = { seat: screenSeat, screen: true, root: article, iframe: undefined, holder, bot: undefined, botState: undefined, sounds: [], details, snapshot, ready: false, sent: undefined };
+  const frame: Frame = { seat: screenSeat, screen: true, root: article, iframe: undefined, holder, bot: undefined, botState: undefined, sounds: [], track: null, details, snapshot, ready: false, sent: undefined };
   frames.set(screenSeat, frame);
   loadFrame(frame);
 }
@@ -228,7 +259,7 @@ function buildSoloFrame(current: DevView, root: HTMLElement): void {
   const details = element("details", {}, snapshot);
   const article = element("article", { className: `seat solo-${current.solo?.screen ?? "small"}` }, bar, holder);
   root.append(article);
-  const frame: Frame = { seat: "p1", screen: false, root: article, iframe: undefined, holder, bot: undefined, botState: undefined, sounds: [], details, snapshot, ready: false, sent: undefined };
+  const frame: Frame = { seat: "p1", screen: false, root: article, iframe: undefined, holder, bot: undefined, botState: undefined, sounds: [], track: null, details, snapshot, ready: false, sent: undefined };
   frames.set("p1", frame);
   loadFrame(frame);
 }
@@ -238,6 +269,7 @@ function buildFrames(current: DevView): void {
   const root = byId("seats");
   frames.clear();
   root.replaceChildren();
+  refreshMusic();
   if (current.solo !== undefined) {
     buildSoloFrame(current, root);
     return;
@@ -283,6 +315,7 @@ function buildFrames(current: DevView): void {
       botState,
       ...(away === undefined ? {} : { away }),
       sounds: [],
+      track: null,
       details,
       snapshot,
       ready: false,
@@ -588,6 +621,15 @@ addEventListener("message", (event: MessageEvent) => {
     playSound(frame, message.sound);
     return;
   }
+  if (message.type === "music") {
+    frame.track = message.track;
+    refreshMusic();
+    return;
+  }
+  if (message.type === "ready" || message.type === "solo-ready") {
+    frame.track = null;
+    refreshMusic();
+  }
   if (view?.solo !== undefined) {
     handleSolo(frame, message);
     return;
@@ -651,7 +693,7 @@ function handleSolo(frame: Frame, message: NonNullable<ReturnType<typeof parseGa
       .then((current) => soloReply(frame, soloMessage(current.language, current.solo?.saved, current.solo?.best ?? {})));
     return;
   }
-  if (message.type === "sound") {
+  if (message.type === "sound" || message.type === "music") {
     return;
   }
   if (message.type === "move") {
@@ -706,6 +748,10 @@ function start(): void {
   const sound = byId<HTMLInputElement>("sound");
   sound.checked = soundOn;
   sound.addEventListener("change", () => setSound(sound.checked));
+  const music = byId<HTMLInputElement>("music");
+  music.checked = musicOn;
+  music.addEventListener("change", () => setMusic(music.checked));
+  document.addEventListener("visibilitychange", refreshMusic);
   addEventListener("pointerdown", unlockSound, { capture: true });
   addEventListener("keydown", unlockSound, { capture: true });
   const events = new EventSource("/__dev/events");

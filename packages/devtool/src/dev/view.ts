@@ -2,8 +2,10 @@ import {
   bridgeVersion,
   soundNotes,
   tickMs,
+  trackLabel,
   type GameOptions,
   type Localized,
+  type MusicTrack,
   type OptionsSpec,
   type PlayerInfo,
   type ProfileData,
@@ -159,8 +161,23 @@ export function frameUpdate(current: DevView, seat: string): Record<string, unkn
   };
 }
 
-export function settingsMessage(sound: boolean): Record<string, unknown> {
-  return { gamehearth: bridgeVersion, type: "settings", sound };
+export function settingsMessage(sound: boolean, music = false): Record<string, unknown> {
+  return { gamehearth: bridgeVersion, type: "settings", sound, music: sound && music };
+}
+
+export interface MusicFrame {
+  screen: boolean;
+  seat: string;
+  track: MusicTrack | null;
+}
+
+export function musicSource<F extends MusicFrame>(frames: Iterable<F>): F | undefined {
+  const all = [...frames];
+  return all.find((frame) => frame.screen && frame.track !== null) ?? all.find((frame) => !frame.screen && frame.track !== null);
+}
+
+export function musicLabel(track: MusicTrack | null): string {
+  return track === null ? "" : `♪ ${trackLabel(track)}`;
 }
 
 export const soundPeakGain = 0.12;

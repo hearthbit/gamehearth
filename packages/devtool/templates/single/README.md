@@ -13,7 +13,7 @@ A single-player game for [Gamehearth](https://github.com/hearthbit/gamehearth-st
 
 ## Sound
 
-With the sound switched on, you hear the start of a level, every mushroom, a level done and the end of the run.
+With the sound switched on, you hear the start of a level, every mushroom, a level done and the end of the run. While you play a level, a short music-box loop runs; the music switch in the menu turns it off on its own.
 
 ## Languages
 

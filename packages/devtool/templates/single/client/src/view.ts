@@ -1,4 +1,4 @@
-import type { SoundName } from "@gamehearth/sdk/client";
+import type { MusicTrack, SoundName } from "@gamehearth/sdk/client";
 import { levelCount, type Finished, type Save } from "../../src/rules";
 import type { Texts } from "./texts";
 
@@ -48,6 +48,40 @@ export function finishLine(t: Texts, totalMs: number, ranked: boolean, best: num
 
 export function finishSound(finished: Finished | undefined): SoundName {
   return finished === undefined ? "coin" : "win";
+}
+
+export const levelMusic: MusicTrack = {
+  name: "Mushroom forest",
+  bpm: 100,
+  beats: 8,
+  voices: [
+    {
+      instrument: "musicbox",
+      notes: [
+        { freq: 783.99, at: 0, length: 1 },
+        { freq: 659.25, at: 1, length: 0.5 },
+        { freq: 587.33, at: 1.5, length: 0.5 },
+        { freq: 523.25, at: 2, length: 1 },
+        { freq: 659.25, at: 3, length: 1 },
+        { freq: 880, at: 4, length: 1 },
+        { freq: 783.99, at: 5, length: 0.5 },
+        { freq: 659.25, at: 5.5, length: 0.5 },
+        { freq: 587.33, at: 6, length: 2 },
+      ],
+    },
+    {
+      instrument: "bass",
+      volume: 0.3,
+      notes: [
+        { freq: 130.81, at: 0, length: 4 },
+        { freq: 98, at: 4, length: 4 },
+      ],
+    },
+  ],
+};
+
+export function sceneMusic(scene: "menu" | "level"): MusicTrack | null {
+  return scene === "level" ? levelMusic : null;
 }
 
 export function hudLine(t: Texts, level: number, elapsedMs: number, found: number, total: number): string {

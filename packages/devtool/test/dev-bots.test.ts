@@ -271,7 +271,7 @@ describe("dev: sound and bots in the bridge", () => {
   });
 
   it("tells the frames whether sound is on, and marks bots in the players", () => {
-    expect(parsePlatformMessage(settingsMessage(true))).toEqual({ gamehearth: 1, type: "settings", sound: true });
+    expect(parsePlatformMessage(settingsMessage(true))).toEqual({ gamehearth: 1, type: "settings", sound: true, music: false });
     const view: DevView = {
       game: { id: "probe", name: "Probe", counts: [2], mode: "turn-based", roles: ["player"], profiles: false },
       session: {

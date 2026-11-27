@@ -90,3 +90,31 @@ test("the single-player frame follows the language selector", async ({ page }) =
   await page.getByLabel("Language").selectOption("en");
   await expect(game.getByRole("button", { name: "Start game" })).toBeVisible();
 });
+
+test("dev plays the level's music only with Sound and Music on and names the track", async ({ page }) => {
+  page.on("pageerror", (error) => {
+    throw error;
+  });
+  await page.setViewportSize({ width: 1200, height: 1000 });
+  await page.goto(server.url);
+  const game = page.locator(".seat").frameLocator("iframe");
+  const music = page.getByLabel("Music");
+  await expect(music).not.toBeChecked();
+  await page.getByLabel("Sound").check();
+  await game.locator("#entries button").first().click();
+  await expect(game.locator("#menu")).toBeHidden();
+  await page.waitForTimeout(300);
+  await expect(page.locator("#music-note")).toHaveText("");
+  await music.check();
+  await expect(page.locator("#music-note")).toHaveText("♪ Mushroom forest");
+  await page.getByLabel("Sound").uncheck();
+  await expect(page.locator("#music-note")).toHaveText("");
+  await page.getByLabel("Sound").check();
+  await expect(page.locator("#music-note")).toHaveText("♪ Mushroom forest");
+  await page.reload();
+  await expect(page.getByLabel("Music")).toBeChecked();
+  await expect(game.locator("#menu")).toBeVisible();
+  await expect(page.locator("#music-note")).toHaveText("");
+  await page.getByLabel("Music").uncheck();
+  await page.getByLabel("Sound").uncheck();
+});
