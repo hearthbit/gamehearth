@@ -7,4 +7,5 @@ A small single-player test game without a reducer (`mode: "single"`, `server: fa
 - "Star" ("Stern") collects a star; the save (stars of the current round, number of rounds) is stored after every star.
 - "End round" ("Runde beenden") records the stars as best score `sterne` (more is better) and as `dauer` 60 seconds minus one second per star (less is better, time format), and starts a new round.
 - "Report wrong" ("Falsch melden") records a best score that the manifest does not know; the platform rejects it, and the game shows the error. `check` therefore deliberately reports this call as an error.
+- "Melodie A", "Melodie B" and "Melodie aus" play two short music loops through the platform (`game.music`, a sine and a sawtooth wave, so that a browser test can tell them apart) or stop the music; "Musik: an/aus" shows `game.musicOn`.
 - The image `stern@2x.svg` checks that preloading also stores file names with `@` the way the game requests them offline.

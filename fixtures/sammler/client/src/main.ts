@@ -1,4 +1,4 @@
-import { connectSolo } from "@gamehearth/sdk/client";
+import { connectSolo, type MusicTrack } from "@gamehearth/sdk/client";
 
 interface Stand {
   format: 1;
@@ -15,6 +15,11 @@ function element<K extends keyof HTMLElementTagNameMap>(tag: K, testid: string, 
   app.append(node);
   return node;
 }
+
+const melodien: Record<"a" | "b", MusicTrack> = {
+  a: { name: "Melodie A", bpm: 120, beats: 2, voices: [{ instrument: "sine", notes: [{ freq: 523.25, at: 0, length: 1 }, { freq: 523.25, at: 1, length: 1 }] }] },
+  b: { name: "Melodie B", bpm: 120, beats: 2, voices: [{ instrument: "sawtooth", notes: [{ freq: 392, at: 0, length: 1 }, { freq: 392, at: 1, length: 1 }] }] },
+};
 
 function readStand(saved: unknown): Stand {
   if (saved !== null && typeof saved === "object" && (saved as Stand).format === 1) {
@@ -40,6 +45,18 @@ try {
   const wrong = element("button", "wrong", "Falsch melden");
   const status = element("p", "status");
   status.className = "status";
+  const musikA = element("button", "music-a", "Melodie A");
+  const musikB = element("button", "music-b", "Melodie B");
+  const musikAus = element("button", "music-off", "Melodie aus");
+  const musik = element("p", "music");
+  const zeigeMusik = (on: boolean) => {
+    musik.textContent = `Musik: ${on ? "an" : "aus"}`;
+  };
+  game.onMusic(zeigeMusik);
+  zeigeMusik(game.musicOn);
+  musikA.addEventListener("click", () => game.music(melodien.a));
+  musikB.addEventListener("click", () => game.music(melodien.b));
+  musikAus.addEventListener("click", () => game.music(null));
   const show = () => {
     count.textContent = `${stand.sterne} ★`;
     best.textContent = `Rekord: ${game.best.sterne ?? "–"} · Schnellste Runde: ${game.best.dauer ?? "–"}`;
