@@ -1,6 +1,6 @@
 {
   "name": "gamehearth",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Dev tool for Gamehearth games: create a new game, try it locally with several players, check it with bot matches and build it as a package",
   "license": "MIT",
   "repository": {
@@ -44,7 +44,7 @@
     "build": "esbuild src/cli.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/cli.js --external:esbuild --external:quickjs-emscripten-core --external:@jitl/quickjs-wasmfile-release-sync --log-level=warning \"--banner:js=#!/usr/bin/env node\""
   },
   "dependencies": {
-    "@gamehearth/sdk": "^0.1.8",
+    "@gamehearth/sdk": "^0.1.9",
     "@jitl/quickjs-wasmfile-release-sync": "0.32.0",
     "esbuild": "^0.28.2",
     "quickjs-emscripten-core": "0.32.0"

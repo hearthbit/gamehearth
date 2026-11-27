@@ -1,5 +1,5 @@
 export * from "./index";
-export const sdkVersion = "0.1.8";
+export const sdkVersion = "0.1.9";
 export { isLanguage, languagePattern, localize, localizedProblem, maxLanguages, pickLanguage, primaryLanguage, supportsLanguage, validateLanguages } from "./i18n";
 export type { Localized } from "./i18n";
 export { canonicalJson, cloneJson, deepFreeze, findNonJson, jsonEquals, maxStateDepth } from "./json";

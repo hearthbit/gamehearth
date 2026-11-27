@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@gamehearth/sdk": "0.1.8"
+    "@gamehearth/sdk": "0.1.9"
   },
   "scripts": {
     "build": "vite build --config client/vite.config.ts --logLevel warn"
