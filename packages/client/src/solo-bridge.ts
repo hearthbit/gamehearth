@@ -1,4 +1,4 @@
-import { bridgeVersion, parseGameMessage, type PlatformMessage, type Sound } from "@gamehearth/sdk/platform";
+import { bridgeVersion, parseGameMessage, type MusicTrack, type PlatformMessage, type Sound } from "@gamehearth/sdk/platform";
 import type { StatSpec } from "./protocol";
 
 export interface SoloBridgeOptions {
@@ -12,6 +12,8 @@ export interface SoloBridgeOptions {
   language?: string;
   sound?: (sound: Sound) => void;
   soundOn?: boolean;
+  music?: (track: MusicTrack | null) => void;
+  musicOn?: boolean;
 }
 
 export const soloTexts = {
@@ -25,20 +27,33 @@ export class SoloBridge {
   readonly #options: SoloBridgeOptions;
   #ready = false;
   #soundOn: boolean;
+  #musicOn: boolean;
+  #track: MusicTrack | null = null;
 
   constructor(options: SoloBridgeOptions) {
     this.#options = options;
     this.#soundOn = options.soundOn ?? false;
+    this.#musicOn = this.#soundOn && (options.musicOn ?? false);
   }
 
-  setSound(on: boolean): void {
-    if (on === this.#soundOn) {
+  setAudio(sound: boolean, music: boolean): void {
+    const musicOn = sound && music;
+    if (sound === this.#soundOn && musicOn === this.#musicOn) {
       return;
     }
-    this.#soundOn = on;
+    const musicChanged = musicOn !== this.#musicOn;
+    this.#soundOn = sound;
+    this.#musicOn = musicOn;
     if (this.#ready) {
-      this.#options.post({ gamehearth: bridgeVersion, type: "settings", sound: on });
+      this.#postSettings();
     }
+    if (musicChanged) {
+      this.#options.music?.(musicOn ? this.#track : null);
+    }
+  }
+
+  #postSettings(): void {
+    this.#options.post({ gamehearth: bridgeVersion, type: "settings", sound: this.#soundOn, music: this.#musicOn });
   }
 
   get ready(): boolean {
@@ -61,9 +76,18 @@ export class SoloBridge {
       }
       return;
     }
+    if (message.type === "music") {
+      this.#track = message.track;
+      if (this.#musicOn) {
+        this.#options.music?.(message.track);
+      }
+      return;
+    }
     if (message.type === "solo-ready") {
       this.#ready = true;
-      post({ gamehearth: bridgeVersion, type: "settings", sound: this.#soundOn });
+      this.#track = null;
+      this.#options.music?.(null);
+      this.#postSettings();
       const saved = this.#state();
       this.#options.onReady?.(saved);
       return;

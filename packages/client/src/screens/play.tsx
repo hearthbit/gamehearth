@@ -5,6 +5,7 @@ import { GameBridge } from "../game-bridge";
 import type { MemberView } from "../protocol";
 import { navigate } from "../router";
 import { memberName, robotSign, tr, useLanguage } from "../language";
+import { music, musicChannel } from "../music";
 import { gameSoundPlayer, sound } from "../sound";
 import { errorText, texts } from "../texts";
 import { isMyTurn } from "../turn";
@@ -14,7 +15,7 @@ import { BackIcon } from "../ui/icons";
 import { LiveOverlay, awayNames, canHandOver } from "../ui/live";
 import { MenuButton, type MenuItem } from "../ui/menu";
 import { toggleMute } from "../ui/push";
-import { useSoundItem } from "../ui/switches";
+import { useMusicItem, useSoundItem } from "../ui/switches";
 import type { RoomScreenChildProps } from "./lobby";
 
 const silentCodes = new Set(["stale", "illegal-move", "not-your-turn", "game-over", "paused", "too-many-inputs", "not-running", "bot-playing"]);
@@ -39,7 +40,11 @@ export function Play({ room, online, command, notify, onLeave }: RoomScreenChild
   autopilotRef.current = autopilot;
   const away = finished ? [] : awayNames(room);
   const [soundOn] = useDeviceSetting(sound);
+  const [musicOn] = useDeviceSetting(music);
   const soundItem = useSoundItem();
+  const musicItem = useMusicItem();
+  const channel = useMemo(() => musicChannel(), []);
+  useEffect(() => () => channel.close(), [channel]);
 
   const bridge = useMemo(
     () =>
@@ -57,13 +62,15 @@ export function Play({ room, online, command, notify, onLeave }: RoomScreenChild
         },
         sound: gameSoundPlayer(),
         soundOn: sound.get(),
+        music: (track) => channel.play(track),
+        musicOn: music.get(),
       }),
     [],
   );
 
   useEffect(() => {
-    bridge.setSound(soundOn && !autopilot);
-  }, [bridge, soundOn, autopilot]);
+    bridge.setAudio(soundOn && !autopilot, musicOn);
+  }, [bridge, soundOn, musicOn, autopilot]);
 
   useEffect(() => {
     const receive = (event: MessageEvent) => {
@@ -141,6 +148,7 @@ export function Play({ room, online, command, notify, onLeave }: RoomScreenChild
             room.you.host && finished && !removed && { label: texts.newRound, onSelect: () => void run({ type: "new-round" }) },
             finished && { label: texts.leave, onSelect: () => void leave() },
             soundItem,
+            musicItem,
             { label: room.muted === true ? texts.unmute : texts.mute, onSelect: () => void toggleMute(room.code, room.muted !== true, notify) },
             { label: texts.home, onSelect: () => navigate("/") },
           ]}

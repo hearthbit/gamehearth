@@ -210,7 +210,7 @@ describe("Language for games", () => {
     });
     bridge.receive({ gamehearth: 1, type: "solo-ready" });
     expect(posted).toEqual([
-      { gamehearth: 1, type: "settings", sound: false },
+      { gamehearth: 1, type: "settings", sound: false, music: false },
       { gamehearth: 1, type: "solo", saved: null, best: {}, language: "en" },
     ]);
   });

@@ -7,6 +7,7 @@ import { GameBridge } from "../game-bridge";
 import { roomPath } from "../router";
 import type { Pairing, ScreenView } from "../protocol";
 import { memberName, tr, useLanguage } from "../language";
+import { music, musicChannel } from "../music";
 import { gameSoundPlayer, sound } from "../sound";
 import { texts } from "../texts";
 import { useWakeLock } from "../turn";
@@ -15,7 +16,7 @@ import { optionText } from "../ui/options";
 import { QrCode } from "../ui/qr";
 import { LanguageSwitch } from "../ui/language-switch";
 import { ThemeSwitch } from "../ui/theme-switch";
-import { SoundSwitch } from "../ui/switches";
+import { MusicSwitch, SoundSwitch } from "../ui/switches";
 import { useScene } from "../effects";
 import { gameColor } from "../ui/cover";
 import { Loading } from "../ui/page";
@@ -116,6 +117,7 @@ function TvPairing({ pairing, online }: { pairing: Pairing; online: boolean }) {
           <LanguageSwitch />
           <ThemeSwitch compact />
           <SoundSwitch />
+          <MusicSwitch />
         </div>
         <p class="tv-hint">{texts.tvPairHint}</p>
         <p class="tv-code" data-testid="tv-code">
@@ -177,7 +179,10 @@ function TvGame({ room, online }: { room: ScreenView; online: boolean }) {
   const host = room.members.find((member) => member.host);
   const away = finished ? [] : awayNames(room);
   const [soundOn] = useDeviceSetting(sound);
+  const [musicOn] = useDeviceSetting(music);
   useScene("play");
+  const channel = useMemo(() => musicChannel(), []);
+  useEffect(() => () => channel.close(), [channel]);
   const bridge = useMemo(
     () =>
       new GameBridge({
@@ -185,13 +190,15 @@ function TvGame({ room, online }: { room: ScreenView; online: boolean }) {
         move: () => Promise.resolve({ ok: false, code: "screen", message: texts.screenCannotMove }),
         sound: gameSoundPlayer(),
         soundOn: sound.get(),
+        music: (track) => channel.play(track),
+        musicOn: music.get(),
       }),
     [],
   );
 
   useEffect(() => {
-    bridge.setSound(soundOn);
-  }, [bridge, soundOn]);
+    bridge.setAudio(soundOn, musicOn);
+  }, [bridge, soundOn, musicOn]);
 
   useEffect(() => {
     const receive = (event: MessageEvent) => {

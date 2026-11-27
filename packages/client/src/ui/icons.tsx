@@ -37,6 +37,17 @@ export function SoundIcon({ on }: { on: boolean }) {
   );
 }
 
+export function MusicIcon({ on }: { on: boolean }) {
+  return (
+    <svg {...common}>
+      <path d="M9 18V6l10-2v12" />
+      <circle cx="6.5" cy="18" r="2.5" />
+      <circle cx="16.5" cy="16" r="2.5" />
+      {on ? null : <path d="M3 3l18 18" />}
+    </svg>
+  );
+}
+
 export function EffectsIcon({ on }: { on: boolean }) {
   return (
     <svg {...common}>

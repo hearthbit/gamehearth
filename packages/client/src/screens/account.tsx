@@ -8,7 +8,7 @@ import { useConfirm } from "../ui/confirm";
 import { LanguageSwitch } from "../ui/language-switch";
 import { Banner, Loading, OfflineBanner, Page, PageHeader } from "../ui/page";
 import { PushCard } from "../ui/push";
-import { EffectsSetting, SoundSetting } from "../ui/switches";
+import { EffectsSetting, MusicSetting, SoundSetting } from "../ui/switches";
 import { ThemeSwitch } from "../ui/theme-switch";
 import { TransferCard } from "../ui/transfer";
 import type { Notify } from "../ui/toasts";
@@ -70,6 +70,7 @@ function SettingsCard() {
         <ThemeSwitch />
       </div>
       <SoundSetting />
+      <MusicSetting />
       <EffectsSetting />
     </section>
   );

@@ -1,8 +1,9 @@
 import { useDeviceSetting } from "../device-setting";
 import { effects } from "../effects";
+import { music, toggleMusic } from "../music";
 import { sound, toggleSound } from "../sound";
 import { texts } from "../texts";
-import { EffectsIcon, SoundIcon } from "./icons";
+import { EffectsIcon, MusicIcon, SoundIcon } from "./icons";
 import type { MenuItem } from "./menu";
 
 export function SoundSwitch() {
@@ -17,6 +18,20 @@ export function SoundSwitch() {
 export function useSoundItem(): MenuItem {
   const [on] = useDeviceSetting(sound);
   return { label: texts.sound, checked: on, icon: <SoundIcon on={on} />, onSelect: () => toggleSound(!on) };
+}
+
+export function MusicSwitch() {
+  const [on] = useDeviceSetting(music);
+  return (
+    <button type="button" class="icon-button toggle" aria-pressed={on} aria-label={texts.music} title={on ? texts.musicOn : texts.musicOff} onClick={() => toggleMusic(!on)}>
+      <MusicIcon on={on} />
+    </button>
+  );
+}
+
+export function useMusicItem(): MenuItem {
+  const [on] = useDeviceSetting(music);
+  return { label: texts.music, checked: on, icon: <MusicIcon on={on} />, onSelect: () => toggleMusic(!on) };
 }
 
 export function EffectsSwitch() {
@@ -57,6 +72,11 @@ function SettingRow({ id, label, hint, on, onChange }: { id: string; label: stri
 export function SoundSetting() {
   const [on] = useDeviceSetting(sound);
   return <SettingRow id="setting-sound" label={texts.sound} hint={texts.soundHint} on={on} onChange={toggleSound} />;
+}
+
+export function MusicSetting() {
+  const [on] = useDeviceSetting(music);
+  return <SettingRow id="setting-music" label={texts.music} hint={texts.musicHint} on={on} onChange={toggleMusic} />;
 }
 
 export function EffectsSetting() {

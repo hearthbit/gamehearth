@@ -1,4 +1,4 @@
-import { bridgeVersion, parseGameMessage, type BridgeUpdate, type MoveResult, type PlatformMessage, type PlayerInfo, type Sound } from "@gamehearth/sdk/platform";
+import { bridgeVersion, parseGameMessage, type BridgeUpdate, type MoveResult, type MusicTrack, type PlatformMessage, type PlayerInfo, type Sound } from "@gamehearth/sdk/platform";
 import { gameLanguage, seatName } from "./language";
 import type { MemberView, RoomGame, RoomView, ScreenView } from "./protocol";
 
@@ -11,6 +11,8 @@ export interface BridgeOptions {
   move: (action: unknown, expectedVersion: number) => Promise<MoveResult>;
   sound?: (sound: Sound) => void;
   soundOn?: boolean;
+  music?: (track: MusicTrack | null) => void;
+  musicOn?: boolean;
 }
 
 function seatedPlayers(members: readonly MemberView[]): Record<string, PlayerInfo> {
@@ -62,20 +64,33 @@ export class GameBridge {
   #latest: BridgeUpdate | undefined;
   #sent: string | undefined;
   #soundOn: boolean;
+  #musicOn: boolean;
+  #track: MusicTrack | null = null;
 
   constructor(options: BridgeOptions) {
     this.#options = options;
     this.#soundOn = options.soundOn ?? false;
+    this.#musicOn = this.#soundOn && (options.musicOn ?? false);
   }
 
-  setSound(on: boolean): void {
-    if (on === this.#soundOn) {
+  setAudio(sound: boolean, music: boolean): void {
+    const musicOn = sound && music;
+    if (sound === this.#soundOn && musicOn === this.#musicOn) {
       return;
     }
-    this.#soundOn = on;
+    const musicChanged = musicOn !== this.#musicOn;
+    this.#soundOn = sound;
+    this.#musicOn = musicOn;
     if (this.#ready) {
-      this.#options.post({ gamehearth: bridgeVersion, type: "settings", sound: on });
+      this.#postSettings();
     }
+    if (musicChanged) {
+      this.#options.music?.(musicOn ? this.#track : null);
+    }
+  }
+
+  #postSettings(): void {
+    this.#options.post({ gamehearth: bridgeVersion, type: "settings", sound: this.#soundOn, music: this.#musicOn });
   }
 
   get ready(): boolean {
@@ -95,13 +110,22 @@ export class GameBridge {
     if (message.type === "ready") {
       this.#ready = true;
       this.#sent = undefined;
-      this.#options.post({ gamehearth: bridgeVersion, type: "settings", sound: this.#soundOn });
+      this.#track = null;
+      this.#options.music?.(null);
+      this.#postSettings();
       this.#flush();
       return;
     }
     if (message.type === "sound") {
       if (this.#soundOn) {
         this.#options.sound?.(message.sound);
+      }
+      return;
+    }
+    if (message.type === "music") {
+      this.#track = message.track;
+      if (this.#musicOn) {
+        this.#options.music?.(message.track);
       }
       return;
     }

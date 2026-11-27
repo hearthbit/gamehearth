@@ -9,6 +9,7 @@ import { useSession } from "../session";
 import { SoloBridge } from "../solo-bridge";
 import { checkOffline, clientPath, rememberGames, soloSession, type SoloSession } from "../solo-service";
 import { lastUser, type LocalUser } from "../solo-store";
+import { music, musicChannel } from "../music";
 import { gameSoundPlayer, sound } from "../sound";
 import { errorText, texts } from "../texts";
 import { useConfirm } from "../ui/confirm";
@@ -17,7 +18,7 @@ import { useScene } from "../effects";
 import { BackIcon } from "../ui/icons";
 import { MenuButton } from "../ui/menu";
 import { Banner, Page } from "../ui/page";
-import { useSoundItem } from "../ui/switches";
+import { useMusicItem, useSoundItem } from "../ui/switches";
 import type { Notify } from "../ui/toasts";
 
 export const preparingTimeoutMs = 4000;
@@ -92,7 +93,11 @@ function SoloGame({ user, gameId, online, notify }: { user: LocalUser; gameId: s
   const frame = useRef<HTMLIFrameElement>(null);
   const given = useRef<string | undefined>(undefined);
   const [soundOn] = useDeviceSetting(sound);
+  const [musicOn] = useDeviceSetting(music);
   const soundItem = useSoundItem();
+  const musicItem = useMusicItem();
+  const channel = useMemo(() => musicChannel(), []);
+  useEffect(() => () => channel.close(), [channel]);
   useScene("play");
 
   useEffect(
@@ -160,6 +165,8 @@ function SoloGame({ user, gameId, online, notify }: { user: LocalUser; gameId: s
       ...(language === undefined ? {} : { language }),
       sound: gameSoundPlayer(),
       soundOn: sound.get(),
+      music: (track) => channel.play(track),
+      musicOn: music.get(),
       saved: () => solo.store.saved(gameId),
       best: () => solo.store.best(gameId),
       onReady: (saved) => {
@@ -180,8 +187,8 @@ function SoloGame({ user, gameId, online, notify }: { user: LocalUser; gameId: s
   }, [game?.build, round, uiLanguage]);
 
   useEffect(() => {
-    bridge?.setSound(soundOn);
-  }, [bridge, soundOn]);
+    bridge?.setAudio(soundOn, musicOn);
+  }, [bridge, soundOn, musicOn]);
 
   useEffect(() => {
     if (bridge === undefined) {
@@ -282,6 +289,7 @@ function SoloGame({ user, gameId, online, notify }: { user: LocalUser; gameId: s
             { label: texts.deleteSave, onSelect: () => void deleteSave(), danger: true },
             game !== undefined && Object.keys(game.stats).length > 0 && { label: texts.deleteBest, onSelect: () => void deleteBest(), danger: true },
             soundItem,
+            musicItem,
             { label: texts.home, onSelect: () => navigate("/") },
           ]}
         />

@@ -46,7 +46,7 @@ type AudioConstructor = new () => AudioContext;
 let context: AudioContext | undefined;
 let gesture = false;
 
-function audioContext(): AudioContext | undefined {
+export function audioContext(): AudioContext | undefined {
   if (context !== undefined) {
     return context;
   }
@@ -63,7 +63,7 @@ function audioContext(): AudioContext | undefined {
   return context;
 }
 
-function unlocked(): boolean {
+export function unlocked(): boolean {
   if (gesture) {
     return true;
   }
@@ -143,9 +143,6 @@ function mainButton(target: EventTarget | null): boolean {
 }
 
 export function installSounds(target: Document = document): () => void {
-  const noteGesture = () => {
-    gesture = true;
-  };
   const tap = (event: Event) => {
     gesture = true;
     if (mainButton(event.target)) {
@@ -162,10 +159,23 @@ export function installSounds(target: Document = document): () => void {
   };
 }
 
+export function resumeAudio(): void {
+  const audio = audioContext();
+  if (audio !== undefined && audio.state !== "running" && audio.state !== "closed") {
+    void audio.resume().catch(() => undefined);
+  }
+}
+
+export function noteGesture(): void {
+  gesture = true;
+}
+
 export function toggleSound(on: boolean): void {
-  sound.set(on);
   if (on) {
     gesture = true;
+  }
+  sound.set(on);
+  if (on) {
     playCue("tap");
   }
 }

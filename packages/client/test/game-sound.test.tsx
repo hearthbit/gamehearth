@@ -240,7 +240,7 @@ describe("Sound on the game page", () => {
     );
     const game = attach(root.querySelector("iframe"));
     fromGame(game, { gamehearth: 1, type: "ready" });
-    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: false }]);
+    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: false, music: false }]);
     fromGame(game, { gamehearth: 1, type: "sound", sound: "coin" });
     expect(played).toEqual([]);
     fromGame(game, { gamehearth: 1, type: "move", id: 7, action: { type: "steer", dir: "none" }, expectedVersion: 3 });
@@ -256,7 +256,7 @@ describe("Sound on the game page", () => {
     const root = mount(<Play room={room()} online command={async () => ({ ok: true })} notify={() => {}} onLeave={async () => {}} />);
     const game = attach(root.querySelector("iframe"));
     fromGame(game, { gamehearth: 1, type: "ready" });
-    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: false }]);
+    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: false, music: false }]);
     fromGame(game, { gamehearth: 1, type: "sound", sound: "coin" });
     expect(played).toEqual([]);
 
@@ -265,7 +265,7 @@ describe("Sound on the game page", () => {
     expect(on.getAttribute("aria-checked")).toBe("false");
     await act(async () => on.click());
     expect(localStorage.getItem("gamehearth.sound")).toBe("on");
-    expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: true });
+    expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: true, music: true });
     played.length = 0;
     fromGame(game, { gamehearth: 1, type: "sound", sound: "coin" });
     expect(played.map((tone) => tone.freq)).toEqual([988, 1319]);
@@ -274,7 +274,7 @@ describe("Sound on the game page", () => {
     const off = await menuItem(root, "Ton");
     expect(off.getAttribute("aria-checked")).toBe("true");
     await act(async () => off.click());
-    expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: false });
+    expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: false, music: false });
     played.length = 0;
     fromGame(game, { gamehearth: 1, type: "sound", sound: "coin" });
     expect(played).toEqual([]);
@@ -286,7 +286,7 @@ describe("Sound on the game page", () => {
     const root = mount(<Play room={room()} online command={async () => ({ ok: true })} notify={() => {}} onLeave={async () => {}} />);
     const game = attach(root.querySelector("iframe"));
     fromGame(game, { gamehearth: 1, type: "ready" });
-    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: true }]);
+    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: true, music: true }]);
     for (let index = 0; index < 20; index++) {
       fromGame(game, { gamehearth: 1, type: "sound", sound: "tap" });
     }
@@ -389,11 +389,11 @@ describe("Sound on the TV", () => {
     act(() => socket.receive({ type: "screen-room", room: screen }));
     const game = attach(root.querySelector("[data-testid=tv-game] iframe"));
     fromGame(game, { gamehearth: 1, type: "ready" });
-    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: true }]);
+    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: true, music: true }]);
     fromGame(game, { gamehearth: 1, type: "sound", sound: "win" });
     expect(played).toHaveLength(6);
     act(() => sound.set(false));
-    expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: false });
+    expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: false, music: false });
     played.length = 0;
     fromGame(game, { gamehearth: 1, type: "sound", sound: "win" });
     expect(played).toEqual([]);
@@ -448,12 +448,12 @@ describe("Sound on the single-player page", () => {
     const root = await open();
     const game = attach(root.querySelector("iframe"));
     fromGame(game, { gamehearth: 1, type: "solo-ready" });
-    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: false }]);
+    expect(settings(game)).toEqual([{ gamehearth: 1, type: "settings", sound: false, music: false }]);
     fromGame(game, { gamehearth: 1, type: "sound", sound: "coin" });
     expect(played).toEqual([]);
     const item = await menuItem(root, "Ton");
     await act(async () => item.click());
-    expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: true });
+    expect(settings(game).at(-1)).toEqual({ gamehearth: 1, type: "settings", sound: true, music: true });
     played.length = 0;
     fromGame(game, { gamehearth: 1, type: "sound", sound: "coin" });
     expect(played.map((tone) => tone.freq)).toEqual([988, 1319]);
