@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { canCreateAdmins, removeTestData } from "./accounts";
-import { game, serverState, settleCache, signIn, soloPlayer, waitForPreload, waitForServer } from "./solo";
+import { game, serverState, settleCache, signIn, soloPlayer, waitForLocalSave, waitForPreload, waitForServer } from "./solo";
 
 test.skip(!canCreateAdmins(), "needs GAMEHEARTH_ADMIN_LINK_COMMAND against an external server");
 test.skip(process.env["GAMEHEARTH_URL"] !== undefined, "the test game Sammler only exists on the test server");
@@ -23,6 +23,7 @@ test("single player: save, best score, leaderboard, offline start and sync after
   }
   await expect(frame.getByTestId("count")).toHaveText("3 ★");
   await expect(frame.getByTestId("status")).toHaveText("gespeichert");
+  await waitForLocalSave(anna, (data) => (data as { sterne?: number } | null)?.sterne === 3);
 
   expect(await frame.locator("body").evaluate(() => {
     try {

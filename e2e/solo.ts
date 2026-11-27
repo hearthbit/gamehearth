@@ -32,6 +32,20 @@ export async function waitForPreload(page: Page): Promise<void> {
     .toBe(true);
 }
 
+export async function waitForLocalSave(page: Page, check: (data: unknown) => boolean): Promise<void> {
+  await expect
+    .poll(async () =>
+      check(
+        await page.evaluate(() => {
+          const last = JSON.parse(localStorage.getItem("gamehearth.solo.last") ?? "null") as { id: number } | null;
+          const data = JSON.parse(localStorage.getItem(`gamehearth.solo.${last?.id ?? 0}`) ?? "{}") as { state?: Record<string, { save?: { data: unknown } }> };
+          return data.state?.["sammler"]?.save?.data ?? null;
+        }),
+      ),
+    )
+    .toBe(true);
+}
+
 export async function serverState(page: Page): Promise<{ save: { data: unknown } | null; best: Record<string, number> }> {
   return page.evaluate(async () => (await fetch("/api/solo/sammler", { credentials: "same-origin" })).json());
 }
