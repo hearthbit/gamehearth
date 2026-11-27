@@ -165,19 +165,21 @@ export function settingsMessage(sound: boolean, music = false): Record<string, u
   return { gamehearth: bridgeVersion, type: "settings", sound, music: sound && music };
 }
 
+export const devSwitchDefaults = { sound: false, music: true } as const;
+
 export interface MusicFrame {
   screen: boolean;
   seat: string;
   track: MusicTrack | null;
 }
 
-export function musicSource<F extends MusicFrame>(frames: Iterable<F>): F | undefined {
-  const all = [...frames];
+export function musicSource<F extends MusicFrame>(frames: Iterable<F>, bots: ReadonlySet<string> = new Set()): F | undefined {
+  const all = [...frames].filter((frame) => !bots.has(frame.seat));
   return all.find((frame) => frame.screen && frame.track !== null) ?? all.find((frame) => !frame.screen && frame.track !== null);
 }
 
-export function musicLabel(track: MusicTrack | null): string {
-  return track === null ? "" : `♪ ${trackLabel(track)}`;
+export function musicLabel(track: MusicTrack | null, playing: boolean): string {
+  return track === null || !playing ? "" : `♪ ${trackLabel(track)}`;
 }
 
 export const soundPeakGain = 0.12;

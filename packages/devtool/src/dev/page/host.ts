@@ -15,6 +15,7 @@ import {
   type DevProblem,
   type DevView,
   type SeatView,
+  devSwitchDefaults,
 } from "../view";
 
 interface Frame {
@@ -32,6 +33,7 @@ interface Frame {
   snapshot: HTMLElement;
   ready: boolean;
   sent: string | undefined;
+  settings?: string | undefined;
   profile?: { box: HTMLDetailsElement; summary: HTMLElement; text: HTMLTextAreaElement; guest: HTMLInputElement; note: HTMLElement; dirty: boolean; shown: string; latest: string };
 }
 
@@ -43,16 +45,17 @@ let view: DevView | undefined;
 let layoutKey = "";
 const soundKey = "gamehearth-dev.sound";
 const musicKey = "gamehearth-dev.music";
-let soundOn = readSetting(soundKey);
-let musicOn = readSetting(musicKey);
+let soundOn = readSetting(soundKey, devSwitchDefaults.sound);
+let musicOn = readSetting(musicKey, devSwitchDefaults.music);
 let audio: AudioContext | undefined;
 const player = createMusicPlayer({ context: () => audioContext() });
 
-function readSetting(key: string): boolean {
+function readSetting(key: string, fallback: boolean): boolean {
   try {
-    return localStorage.getItem(key) === "on";
+    const stored = localStorage.getItem(key);
+    return stored === "on" ? true : stored === "off" ? false : fallback;
   } catch {
-    return false;
+    return fallback;
   }
 }
 
@@ -78,14 +81,19 @@ function audioContext(): AudioContext | undefined {
   } catch {
     return undefined;
   }
+  audio.addEventListener("statechange", refreshMusic);
   return audio;
 }
 
 function unlockSound(): void {
   const context = soundOn ? audioContext() : undefined;
-  if (context?.state === "suspended") {
+  if (context !== undefined && context.state !== "running" && context.state !== "closed") {
     void context.resume().catch(() => undefined);
   }
+}
+
+function botSeats(): Set<string> {
+  return new Set((view?.session.seats ?? []).filter((entry) => entry.bot).map((entry) => entry.seat));
 }
 
 function playSound(frame: Frame, sound: Sound): void {
@@ -116,18 +124,24 @@ function playSound(frame: Frame, sound: Sound): void {
 }
 
 function refreshMusic(): void {
-  const track = soundOn && musicOn ? (musicSource(frames.values())?.track ?? null) : null;
+  const track = soundOn && musicOn ? (musicSource(frames.values(), botSeats())?.track ?? null) : null;
   const hidden = document.visibilityState === "hidden";
   if (track !== null && !hidden) {
     unlockSound();
   }
   player.setPaused(hidden);
   player.play(track);
-  byId("music-note").textContent = musicLabel(hidden ? null : track);
+  byId("music-note").textContent = musicLabel(track, !hidden && audio?.state === "running");
 }
 
 function sendSettings(frame: Frame): void {
-  frame.iframe?.contentWindow?.postMessage(settingsMessage(soundOn, musicOn), "*");
+  const message = settingsMessage(soundOn, musicOn && !botSeats().has(frame.seat));
+  const text = JSON.stringify(message);
+  if (text === frame.settings) {
+    return;
+  }
+  frame.settings = text;
+  frame.iframe?.contentWindow?.postMessage(message, "*");
 }
 
 function sendAllSettings(): void {
@@ -208,6 +222,7 @@ function loadFrame(frame: Frame): void {
   const current = view;
   frame.ready = false;
   frame.sent = undefined;
+  frame.settings = undefined;
   frame.sounds = [];
   frame.track = null;
   refreshMusic();
@@ -599,8 +614,12 @@ function render(next: DevView): void {
   renderLogs(next.logs);
   renderInsight(next);
   for (const frame of frames.values()) {
+    if (frame.ready) {
+      sendSettings(frame);
+    }
     sendUpdate(frame);
   }
+  refreshMusic();
 }
 
 addEventListener("message", (event: MessageEvent) => {
@@ -637,6 +656,7 @@ addEventListener("message", (event: MessageEvent) => {
   if (message.type === "ready") {
     frame.ready = true;
     frame.sent = undefined;
+    frame.settings = undefined;
     sendSettings(frame);
     sendUpdate(frame);
     return;
@@ -687,6 +707,7 @@ function handleSolo(frame: Frame, message: NonNullable<ReturnType<typeof parseGa
   }
   if (message.type === "solo-ready") {
     frame.ready = true;
+    frame.settings = undefined;
     sendSettings(frame);
     void fetch("/__dev/view")
       .then((response) => response.json() as Promise<DevView>)

@@ -1,7 +1,7 @@
 import { parsePlatformMessage, type MusicTrack } from "@gamehearth/sdk/platform";
 import { describe, expect, it } from "vitest";
 import { hostHtml } from "../src/dev/page";
-import { musicLabel, musicSource, settingsMessage } from "../src/dev/view";
+import { devSwitchDefaults, musicLabel, musicSource, settingsMessage } from "../src/dev/view";
 
 const loop: MusicTrack = { name: "Forest", bpm: 120, beats: 4, voices: [{ instrument: "musicbox", notes: [{ freq: 523, at: 0, length: 1 }] }] };
 const { name: _name, ...unnamed } = loop;
@@ -31,8 +31,27 @@ describe("dev: music", () => {
   });
 
   it("names the playing track, or just music without a name", () => {
-    expect(musicLabel(loop)).toBe("♪ Forest");
-    expect(musicLabel(unnamed)).toBe("♪ music");
-    expect(musicLabel(null)).toBe("");
+    expect(musicLabel(loop, true)).toBe("♪ Forest");
+    expect(musicLabel(unnamed, true)).toBe("♪ music");
+    expect(musicLabel(null, true)).toBe("");
+  });
+});
+
+describe("Review 17: dev behaves like the platform", () => {
+  it("has Music on and Sound off by default, so turning on sound brings the music along", () => {
+    expect(devSwitchDefaults).toEqual({ sound: false, music: true });
+  });
+
+  it("plays no track from a seat that a bot plays, as the platform does for a seat on autopilot", () => {
+    const tv = { screen: true, seat: "tv", track: null as MusicTrack | null };
+    const p1 = { screen: false, seat: "p1", track: loop as MusicTrack | null };
+    const p2 = { screen: false, seat: "p2", track: unnamed as MusicTrack | null };
+    expect(musicSource([tv, p1, p2], new Set(["p1"]))).toBe(p2);
+    expect(musicSource([tv, p1, p2], new Set(["p1", "p2"]))).toBeUndefined();
+  });
+
+  it("names the track only while music actually plays", () => {
+    expect(musicLabel(loop, true)).toBe("♪ Forest");
+    expect(musicLabel(loop, false)).toBe("");
   });
 });
