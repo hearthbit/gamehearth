@@ -267,7 +267,7 @@ describe.each(["turn-based", "realtime", "single"])("template %s", (name) => {
     await createGame(dir, { template: name, name: "Mäxchen", install: false, git: false, run: fakeRunner().run });
     expect(read(dir, "client/src/texts.ts")).not.toMatch(/Kartenduell|Card Duel|Fangen|"Tag"|Pilzsuche|Mushroom Hunt/);
     const output = execFileSync(process.execPath, [vitest, "run", "--root", dir, "test/view.test.ts"], { encoding: "utf8", stdio: "pipe" });
-    expect(output).toMatch(/Tests\s+\d+ passed/);
+    expect(output.replace(/\u001b\[[\d;]*m/g, "")).toMatch(/Tests\s+\d+ passed/);
   }, 120_000);
 
   it("passes the catalog in every stepMatch example of AGENTS.md, like the template's own tests", () => {

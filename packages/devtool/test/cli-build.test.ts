@@ -23,7 +23,8 @@ describe("dev tool as a command", () => {
     expect(command).toBe("esbuild");
     const outfile = join(out, "cli.js");
     const esbuild = join(dirname(createRequire(import.meta.url).resolve("esbuild/package.json")), "bin", "esbuild");
-    execFileSync(process.execPath, [esbuild, ...args.map((arg) => (arg.startsWith("--outfile=") ? `--outfile=${outfile}` : arg))], { cwd: root });
+    const launcher = readFileSync(esbuild).subarray(0, 2).toString() === "#!" ? [process.execPath, esbuild] : [esbuild];
+    execFileSync(launcher[0] ?? esbuild, [...launcher.slice(1), ...args.map((arg) => (arg.startsWith("--outfile=") ? `--outfile=${outfile}` : arg))], { cwd: root });
     expect(readFileSync(outfile, "utf8").split("\n")[0]).toBe("#!/usr/bin/env node");
     const run = spawnSync(process.execPath, [outfile], { cwd: root, encoding: "utf8" });
     expect(run.status).toBe(2);

@@ -192,7 +192,8 @@ describe("Review 4: Ctrl+C cleans up", () => {
     const args = [...scripts.build.matchAll(/"([^"]*)"|(\S+)/g)].map((match) => match[1] ?? match[2] ?? "").slice(1);
     const outfile = join(work, "cli.js");
     const esbuild = join(dirname(createRequire(import.meta.url).resolve("esbuild/package.json")), "bin", "esbuild");
-    execFileSync(process.execPath, [esbuild, ...args.map((arg) => (arg.startsWith("--outfile=") ? `--outfile=${outfile}` : arg))], { cwd: devtool });
+    const launcher = readFileSync(esbuild).subarray(0, 2).toString() === "#!" ? [process.execPath, esbuild] : [esbuild];
+    execFileSync(launcher[0] ?? esbuild, [...launcher.slice(1), ...args.map((arg) => (arg.startsWith("--outfile=") ? `--outfile=${outfile}` : arg))], { cwd: devtool });
     const preload = join(work, "ctrl-c.mjs");
     writeFileSync(
       preload,

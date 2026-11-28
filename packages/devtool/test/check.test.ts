@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { checkGame, type CheckOptions } from "../src/check";
@@ -372,7 +373,7 @@ describe("replay command", () => {
 
   it("puts paths with spaces in quotes", async () => {
     const report = await check("crash-three", { players: 3, games: 1 });
-    const text = formatReport(report, "C:/");
+    const text = formatReport({ ...report, gameDir: resolve("/games/my games/crash-three") }, resolve("/games"));
     expect(text).toMatch(/check "[^"]* [^"]*crash-three" --players 3/);
   });
 });
